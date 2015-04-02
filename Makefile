@@ -1,10 +1,10 @@
-calc: exemplo01.l exemplo01.y
-	bison -d exemplo01.y
-	mv exemplo01.tab.h sintatico.h
-	mv exemplo01.tab.c sintatico.c
-	flex exemplo01.l
+safec: safec.l safec.y
+	bison -d safec.y
+	mv safec.tab.h sintatico.h
+	mv safec.tab.c sintatico.c
+	flex safec.l
 	mv lex.yy.c lexico.c
-	gcc -o calc -lm sintatico.c lexico.c
+	gcc -o safec -lm sintatico.c lexico.c
 
 clean:
-	rm lexico.* sintatico.* calc.exe
+	rm lexico.* sintatico.* safec
