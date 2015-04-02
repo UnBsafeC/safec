@@ -7,13 +7,14 @@ white [ \t]+
 digit [0-9]
 integer {digit}+
 exponant [eE][+-]?{integer}
+real {integer}("."{integer})?{exponant}?
 
 %%
 
 {white} { /* We ignore white characters */ }
-{digit} { 
+{real} {
   yylval = atof(yytext);
-  return(NUMBER); 
+  return(NUMBER);
 }
 
 "/" return(DIVIDE);

@@ -4,7 +4,18 @@
 #include <stdlib.h>
 #include <math.h>
 
-int var = 0;
+int division_by_zero = 0;
+
+void check_division_by_zero(int num){
+  if (num == 1){
+    printf("divisão por zero encontrada \n");
+    //Para poder continuar inserindo valores;
+    division_by_zero = 0;
+  }
+  else
+    printf("Está tudo ok \n");
+}
+
 %}
 
 %token END
@@ -19,23 +30,15 @@ int var = 0;
 %%
 
 Input:
-   /* Empty */
    | Input Line
    ;
 Line:
   END
-   | Expression END {if (var==1){ 
-                      printf("divisão por zero encontrada"); 
-                      //Para poder continuar inserindo valores;
-                      var = 0;
-                      }
-                     else
-                     printf("Está tudo ok \n");
-                    }
-   ;
-Expression: 
+   | Expression END { check_division_by_zero(division_by_zero); }
+Expression:
   NUMBER { $$ = $1; }
-   | Expression DIVIDE Expression { if ($3 == 0) var = 1; }
+   /* $3 acessa o segundo Expression da regra abaixo */
+   | Expression DIVIDE Expression { if ($3 == 0) division_by_zero = 1; }
    ;
 
 %%
