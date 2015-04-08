@@ -23,6 +23,7 @@ void check_division_by_zero(int num){
 %token DIVIDE
 %token SYMBOL
 %token NUMBER
+%token MINUS
 
 
 %start Input
@@ -38,9 +39,13 @@ Line:
 Expression:
   NUMBER { $$ = $1; }
    /* $3 acessa o segundo Expression da regra abaixo */
-   | Expression DIVIDE Expression { if ($3 == 0) division_by_zero = 1; }
+   | Expression DIVIDE Divisor { if ($3 == 0) division_by_zero = 1; }
    ;
-
+Divisor:
+  /* checa se a o divisor é uma outra expressão */
+  NUMBER { $$ = $1; }
+    | Divisor MINUS Divisor { $$ = $1 - $3; }
+    ;
 %%
 
 int yyerror(char *s) {

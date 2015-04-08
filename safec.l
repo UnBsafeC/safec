@@ -18,6 +18,7 @@ real {integer}("."{integer})?{exponant}?
 }
 
 "/" return(DIVIDE);
+"-" return(MINUS);
 "\n" return(END);
 
 %%
