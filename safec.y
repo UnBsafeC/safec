@@ -29,24 +29,36 @@ void check_division_by_zero(int num){
 
 %%
 
+/* TODO: Quando temos uma subdivisão ex: 2/1/0 
+o compilador se confunde e não saber como lidar com a divisão 2/1.
+Checar como resolver isso.
+*/
 Input:
     | Input Line
     ;
 Line:
     END
-    | Expression END              { check_division_by_zero(division_by_zero); }
+    | Expression END             { check_division_by_zero(division_by_zero); }
 Expression:
-    NUMBER                        { $$ = $1; }
     /* $3 acessa o segundo Expression da regra abaixo */
-    | Expression DIVIDE Divisor   { if ($3 == 0) division_by_zero = 1; }
+    Numerator DIVIDE Divisor   { 
+       if ($3 == 0) division_by_zero = 1; 
+       else $$ = $1 / $3;
+    }
+    ;
+Numerator:
+    NUMBER                        { $$ = $1; }
+    | Numerator MINUS Numerator   { $$ = $1 - $3; }
+    | Numerator PLUS Numerator    { $$ = $1 + $3; }
+    | Numerator TIMES Numerator   { $$ = $1 * $3; }
     ;
 Divisor:
     /* checa se a o divisor é uma outra expressão */
     NUMBER                        { $$ = $1; }
     | Divisor MINUS Divisor       { $$ = $1 - $3; }
     | Divisor PLUS Divisor        { $$ = $1 + $3; }
-    | Divisor TIMES Divisor        { $$ = $1 * $3; }
-    | Divisor DIVIDE Divisor        { $$ = $1 / $3; }
+    | Divisor TIMES Divisor       { $$ = $1 * $3; }
+    | Divisor DIVIDE Divisor      { $$ = $1 / $3; }
     ;
 %%
 
