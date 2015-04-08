@@ -19,32 +19,34 @@ void check_division_by_zero(int num){
 %}
 
 %token END
-%token TYPE
-%token DIVIDE
-%token SYMBOL
+%token DIVIDE TIMES PLUS MINUS
 %token NUMBER
-%token MINUS
 
+%left PLUS MINUS
+%left DIVIDE TIMES
 
 %start Input
 
 %%
 
 Input:
-   | Input Line
-   ;
+    | Input Line
+    ;
 Line:
-  END
-   | Expression END { check_division_by_zero(division_by_zero); }
+    END
+    | Expression END              { check_division_by_zero(division_by_zero); }
 Expression:
-  NUMBER { $$ = $1; }
-   /* $3 acessa o segundo Expression da regra abaixo */
-   | Expression DIVIDE Divisor { if ($3 == 0) division_by_zero = 1; }
-   ;
+    NUMBER                        { $$ = $1; }
+    /* $3 acessa o segundo Expression da regra abaixo */
+    | Expression DIVIDE Divisor   { if ($3 == 0) division_by_zero = 1; }
+    ;
 Divisor:
-  /* checa se a o divisor é uma outra expressão */
-  NUMBER { $$ = $1; }
-    | Divisor MINUS Divisor { $$ = $1 - $3; }
+    /* checa se a o divisor é uma outra expressão */
+    NUMBER                        { $$ = $1; }
+    | Divisor MINUS Divisor       { $$ = $1 - $3; }
+    | Divisor PLUS Divisor        { $$ = $1 + $3; }
+    | Divisor TIMES Divisor        { $$ = $1 * $3; }
+    | Divisor DIVIDE Divisor        { $$ = $1 / $3; }
     ;
 %%
 

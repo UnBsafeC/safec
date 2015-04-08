@@ -12,14 +12,13 @@ real {integer}("."{integer})?{exponant}?
 %%
 
 {white} { /* We ignore white characters */ }
-{real} {
-  yylval = atof(yytext);
-  return(NUMBER);
-}
+{real}  { yylval = atof(yytext); return(NUMBER); }
 
-"/" return(DIVIDE);
-"-" return(MINUS);
-"\n" return(END);
+"*"     { return(TIMES); }
+"/"     { return(DIVIDE); }
+"-"     { return(MINUS); }
+"+"     { return(PLUS); }
+"\n"    { return(END); }
 
 %%
 
