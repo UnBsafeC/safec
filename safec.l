@@ -2,7 +2,11 @@
 #include "global.h"
 #include "sintatico.h"
 #include <stdlib.h>
+
+int line_number=1;
+
 %}
+
 white [ \t]+
 digit [0-9]
 integer {digit}+
@@ -22,7 +26,7 @@ real {integer}("."{integer})?
 "+"     { return(PLUS); }
 "("     { return(LEFT_PARENTHESIS); }
 ")"     { return(RIGHT_PARENTHESIS); }
-"\n"    { return(END); }
+"\n"    { ++line_number; return(END); }
 
 %%
 

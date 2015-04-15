@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+extern int line_number;
 int division_by_zero = 0;
 
 void check_division_by_zero(int num){
@@ -58,8 +59,8 @@ Expression:
 
 %%
 
-int yyerror(char *s) {
-   printf("%s\n",s);
+int yyerror(char *message) {
+   printf("Message error: %s (line: %d)\n", message, line_number);
 }
 
 int main(void) {
