@@ -16,7 +16,7 @@ void check_division_by_zero(int num){
 %}
 
 %token END
-%token DIVIDE TIMES PLUS MINUS POW
+%token DIVIDE TIMES PLUS MINUS POW SQRT
 %token NUMBER
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS COMMA
 
@@ -39,20 +39,21 @@ Line:
         check_division_by_zero(division_by_zero); 
       }
 Expression:
-   NUMBER                                           { $$=$1; }
+   NUMBER                                               { $$=$1; }
+   | SQRT LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS { $$=sqrt($3); }
    | POW LEFT_PARENTHESIS Expression COMMA Expression RIGHT_PARENTHESIS { 
         $$=pow($3,$5); }
-   | Expression PLUS Expression                     { $$=$1+$3; }
-   | Expression MINUS Expression                    { $$=$1-$3; }
-   | Expression TIMES Expression                    { $$=$1*$3; }
+   | Expression PLUS Expression                         { $$=$1+$3; }
+   | Expression MINUS Expression                        { $$=$1-$3; }
+   | Expression TIMES Expression                        { $$=$1*$3; }
    | Expression DIVIDE Expression { 
         if($3 == 0.0)
             division_by_zero = 1;
         else
             $$ = $1/$3;
       }
-   | MINUS Expression %prec NEG                     { $$=-$2; }
-   | LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS  { $$=$2; }
+   | MINUS Expression %prec NEG                         { $$=-$2; }
+   | LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS      { $$=$2; }
    ;
 
 %%
