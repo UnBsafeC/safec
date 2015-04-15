@@ -8,19 +8,17 @@ int division_by_zero = 0;
 
 void check_division_by_zero(int num){
   if (num == 1){
-    printf("divisão por zero encontrada \n");
+    printf("Divisão por zero encontrada!!\n");
     division_by_zero = 0;
   }
-  else
-    printf("Está tudo ok \n");
 }
 
 %}
 
 %token END
-%token DIVIDE TIMES PLUS MINUS
+%token DIVIDE TIMES PLUS MINUS POW
 %token NUMBER
-%token LEFT_PARENTHESIS RIGHT_PARENTHESIS
+%token LEFT_PARENTHESIS RIGHT_PARENTHESIS COMMA
 
 %left PLUS MINUS
 %left DIVIDE TIMES
@@ -36,11 +34,14 @@ Input:
 Line:
     END
     | Expression END { 
+        if(division_by_zero == 0)
+            printf("Resultado: %f", $1);
         check_division_by_zero(division_by_zero); 
-        printf("Resultado: %f", $1);
       }
 Expression:
    NUMBER                                           { $$=$1; }
+   | POW LEFT_PARENTHESIS Expression COMMA Expression RIGHT_PARENTHESIS { 
+        $$=pow($3,$5); }
    | Expression PLUS Expression                     { $$=$1+$3; }
    | Expression MINUS Expression                    { $$=$1-$3; }
    | Expression TIMES Expression                    { $$=$1*$3; }
