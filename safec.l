@@ -18,6 +18,8 @@ real {integer}("."{integer})?{exponant}?
 "/"     { return(DIVIDE); }
 "-"     { return(MINUS); }
 "+"     { return(PLUS); }
+"("     { return(LEFT_PARENTHESIS); }
+")"     { return(RIGHT_PARENTHESIS); }
 "\n"    { return(END); }
 
 %%
