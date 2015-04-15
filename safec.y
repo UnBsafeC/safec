@@ -5,6 +5,7 @@
 #include <math.h>
 
 extern int line_number;
+extern FILE *yyin;
 int division_by_zero = 0;
 
 void check_division_by_zero(int num){
@@ -63,6 +64,25 @@ int yyerror(char *message) {
    printf("Message error: %s (line: %d)\n", message, line_number);
 }
 
-int main(void) {
-   yyparse();
+int main(int argc, char *argv[]) {
+   if(argc != 2) {
+        printf("We need a input file as argumment!\nUsage: safec <input_file>\n"); 
+        exit -1;
+   }
+
+   FILE *input = fopen(argv[1],"r");
+
+   if(input == 0) {
+        printf( "Could not open file\n" );
+        exit -1;
+   }
+
+   yyin = input;
+
+   do {
+        yyparse();
+   } while (!feof(yyin));
+
+   return 0;
 }
+
