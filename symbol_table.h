@@ -67,7 +67,7 @@ node *find_symbol(node *node, char symbol[40]){
     }
 
     if( search_completed == FALSE){
-        puts("Simbolo nao encontrado");
+        printf("Simbolo %s nao encontrado \n",symbol);
         return 0;
     }
 }
@@ -85,23 +85,4 @@ void destroy_list(node *node){
         }
     }
     puts("Destruindo lista!");
-}
-
-int main(){
-
-    node *list = (node *) malloc(sizeof(node));
-    node *my_symbol;
-    if (!list) {
-      puts("Sem memoria disponivel");
-      exit(1);
-    }
-
-    create_list(list);
-    insert_symbol(list,"haha");
-    my_symbol = find_symbol(list,"haha");
-    printf("O simbolo %s foi encontrado com sucesso \n", my_symbol->symbol);
-
-    destroy_list(list);
-
-    return 0;
 }
