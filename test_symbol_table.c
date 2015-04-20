@@ -1,5 +1,5 @@
 /* Arquivo de teste da tabela de simbolos*/
-#include "symbol_table.h"
+#include "symbol_table.c"
 
 int main(){
 
