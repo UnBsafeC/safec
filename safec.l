@@ -1,7 +1,7 @@
 %{
 #include "global.h"
-#include "sintatico.h"
 #include <stdlib.h>
+#include "sintatico.h"
 
 int line_number=1;
 
@@ -26,10 +26,11 @@ real {integer}("."{integer})?
 "+"     { return(PLUS); }
 "("     { return(LEFT_PARENTHESIS); }
 ")"     { return(RIGHT_PARENTHESIS); }
-"\n"    { ++line_number; return(END); }
+"}"    { return(END); }
+"{"    { return(START); }
 
 %%
 
-yywrap () {
-return 0;
+yywrap(){
+  return 1;
 }

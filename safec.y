@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+
+
 extern int line_number;
 extern FILE *yyin;
 int division_by_zero = 0;
@@ -17,7 +19,8 @@ void check_division_by_zero(int num){
 
 %}
 
-%token END
+%token END 
+%token START 
 %token DIVIDE TIMES PLUS MINUS POW SQRT
 %token NUMBER
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS COMMA
@@ -31,15 +34,19 @@ void check_division_by_zero(int num){
 %%
 
 Input:
+    | Input START Line
     | Input Line
+    | Input Line END { yywrap(); }
+
     ;
 Line:
     END
-    | Expression END { 
+    | Expression { 
         if(division_by_zero == 0)
-            printf("Resultado: %f", $1);
+            printf("Resultado : %f\n", $1);
         check_division_by_zero(division_by_zero); 
       }
+
 Expression:
    NUMBER                                               { $$=$1; }
    | SQRT LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS { $$=sqrt($3); }
@@ -49,10 +56,13 @@ Expression:
    | Expression MINUS Expression                        { $$=$1-$3; }
    | Expression TIMES Expression                        { $$=$1*$3; }
    | Expression DIVIDE Expression { 
-        if($3 == 0.0)
+        if($3 == 0.0){
             division_by_zero = 1;
-        else
+            $$ = 0;
+            }
+        else{
             $$ = $1/$3;
+            }
       }
    | MINUS Expression %prec NEG                         { $$=-$2; }
    | LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS      { $$=$2; }
@@ -79,10 +89,9 @@ int main(int argc, char *argv[]) {
 
    yyin = input;
 
-   do {
-        yyparse();
-   } while (!feof(yyin));
+    while (!feof(yyin)){
+      return yyparse();
+    }
 
    return 0;
 }
-
