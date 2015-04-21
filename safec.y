@@ -34,8 +34,12 @@ void check_division_by_zero(int num){
 %%
 
 Input:
+    /* Para ler corretamente de um arquivo de testes, foi preciso
+    definir uma estrutura basica, que pode evoluir para um arquivo em c.
+    O arquivo exemplo esta em examples/sample_input */
     | Input START Line
     | Input Line
+    /* yywrap() encerra a leitura do yyparse(), quando o "}" e encontrado */
     | Input Line END { yywrap(); }
 
     ;
