@@ -40,7 +40,7 @@ Input:
     | Input START Line
     | Input Line
     /* yywrap() encerra a leitura do yyparse(), quando o "}" e encontrado */
-    | Input Line END { yywrap(); }
+    | Input Line END
 
     ;
 Line:
