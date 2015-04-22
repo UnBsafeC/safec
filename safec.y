@@ -4,9 +4,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-extern node *list;
-
-
 extern int line_number;
 extern FILE *yyin;
 int division_by_zero = 0;
@@ -20,27 +17,29 @@ void check_division_by_zero(int num){
 
 %}
 
-%token END
-%token END_FILE
-%token START_FILE
 %token DIVIDE TIMES PLUS MINUS POW SQRT
-%token NUMBER
+%token NUMBER END
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS COMMA
 
 %left PLUS MINUS
 %left DIVIDE TIMES
 %left NEG
 
+%token END_FILE START_FILE
+
 %start Input
 
 %%
 
 Input:
-    | Input START_FILE Line
-    | Input Line
-    | Input Line END_FILE
+    | Input Stream
 
+Stream:
+    END_FILE
+    | START_FILE Line
+    | Line
     ;
+
 Line:
     END
     | Expression {

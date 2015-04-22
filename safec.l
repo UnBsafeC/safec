@@ -25,9 +25,9 @@ real {integer}("."{integer})?
 "+"     { return(PLUS); }
 "("     { return(LEFT_PARENTHESIS); }
 ")"     { return(RIGHT_PARENTHESIS); }
+"{"     { return(START_FILE); }
+"}"     { return(END_FILE); }
 "\n"    { return(END); }
-"{"    { return(START_FILE); }
-"}"    { return(END_FILE); }
 
 %%
 
