@@ -2,9 +2,8 @@
 #include "global.h"
 #include <stdlib.h>
 #include "sintatico.h"
-
 int line_number=1;
-
+extern node *list;
 %}
 
 white [ \t]+
