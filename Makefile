@@ -7,7 +7,6 @@ safec: safec.l safec.y
 	gcc -o safec -lm sintatico.c lexico.c symbol_table.c
 
 test: clean safec
-	cp safec tests/
 	tests/run_all
 
 clean:
