@@ -79,19 +79,21 @@ int yyerror(char *message) {
 }
 
 int main(int argc, char *argv[]) {
-   if(argc != 2) {
-        printf("We need a input file as argumment!\nUsage: safec <input_file>\n"); 
-        exit -1;
+
+  /*Isso e necessario para que no teste possamos
+  passar argumentos utilizando echo, e nao apenas arquivos*/
+   if(argc == 2) {
+      FILE *input = fopen(argv[1],"r");
+      yyin = input;
+    if(input == 0) {
+          printf( "Could not open file\n" );
+          exit -1;
+    }
    }
+   else
+    yyin = stdin;
 
-   FILE *input = fopen(argv[1],"r");
-
-   if(input == 0) {
-        printf( "Could not open file\n" );
-        exit -1;
-   }
-
-   yyin = input;
+    
 
     while (!feof(yyin)){
       return yyparse();
