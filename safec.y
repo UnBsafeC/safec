@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+extern node *list;
 
 
 extern int line_number;
@@ -19,8 +20,9 @@ void check_division_by_zero(int num){
 
 %}
 
-%token END 
-%token START 
+%token END
+%token END_FILE
+%token START_FILE
 %token DIVIDE TIMES PLUS MINUS POW SQRT
 %token NUMBER
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS COMMA
@@ -34,32 +36,28 @@ void check_division_by_zero(int num){
 %%
 
 Input:
-    /* Para ler corretamente de um arquivo de testes, foi preciso
-    definir uma estrutura basica, que pode evoluir para um arquivo em c.
-    O arquivo exemplo esta em examples/sample_input */
-    | Input START Line
+    | Input START_FILE Line
     | Input Line
-    /* yywrap() encerra a leitura do yyparse(), quando o "}" e encontrado */
-    | Input Line END
+    | Input Line END_FILE
 
     ;
 Line:
     END
-    | Expression { 
+    | Expression {
         if(division_by_zero == 0)
             printf("Resultado : %f\n", $1);
-        check_division_by_zero(division_by_zero); 
+        check_division_by_zero(division_by_zero);
       }
 
 Expression:
    NUMBER                                               { $$=$1; }
    | SQRT LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS { $$=sqrt($3); }
-   | POW LEFT_PARENTHESIS Expression COMMA Expression RIGHT_PARENTHESIS { 
+   | POW LEFT_PARENTHESIS Expression COMMA Expression RIGHT_PARENTHESIS {
         $$=pow($3,$5); }
    | Expression PLUS Expression                         { $$=$1+$3; }
    | Expression MINUS Expression                        { $$=$1-$3; }
    | Expression TIMES Expression                        { $$=$1*$3; }
-   | Expression DIVIDE Expression { 
+   | Expression DIVIDE Expression {
         if($3 == 0.0){
             division_by_zero = 1;
             $$ = 0;
@@ -80,8 +78,6 @@ int yyerror(char *message) {
 
 int main(int argc, char *argv[]) {
 
-  /*Isso e necessario para que no teste possamos
-  passar argumentos utilizando echo, e nao apenas arquivos*/
    if(argc == 2) {
       FILE *input = fopen(argv[1],"r");
       yyin = input;
@@ -93,7 +89,7 @@ int main(int argc, char *argv[]) {
    else
     yyin = stdin;
 
-    
+
 
     while (!feof(yyin)){
       return yyparse();
