@@ -7,5 +7,7 @@ int main(){
 2/2
 3/0
 3/(5-5)
+int a;
+float b;
 
 }

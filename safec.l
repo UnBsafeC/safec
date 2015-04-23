@@ -14,12 +14,17 @@ real {integer}("."{integer})?
 includes .*#include.*
 main .*main.*
 
+types (int)|(float)|(double)|(char)
+variables {types}.([a-z])\;
+
+
 %%
 
 {white} { /* We ignore white characters */ }
 {includes} {return(INCLUDES); }
 {main} {return(MAIN); }
 {real}  { yylval = atof(yytext); return(NUMBER); }
+{variables} { return(VARIABLE); }
 
 "sqrt"  { return(SQRT); }
 "pow"   { return(POW); }

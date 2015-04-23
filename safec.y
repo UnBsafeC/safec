@@ -27,6 +27,7 @@ void check_division_by_zero(int num){
 
 %token END_FILE START_FILE
 %token INCLUDES MAIN
+%token VARIABLE
 
 %start Input
 
@@ -53,6 +54,7 @@ Line:
             printf("Resultado : %f\n", $1);
         check_division_by_zero(division_by_zero);
       }
+    | Declaration
 
 Expression:
    NUMBER                                               { $$=$1; }
@@ -74,6 +76,9 @@ Expression:
    | MINUS Expression %prec NEG                         { $$=-$2; }
    | LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS      { $$=$2; }
    ;
+
+Declaration:
+    VARIABLE {printf("Declaração de variavel encontrada !!\n"); }
 
 %%
 
