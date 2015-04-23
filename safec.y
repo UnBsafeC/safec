@@ -26,6 +26,7 @@ void check_division_by_zero(int num){
 %left NEG
 
 %token END_FILE START_FILE
+%token INCLUDES MAIN
 
 %start Input
 
@@ -38,6 +39,11 @@ Stream:
     END_FILE
     | START_FILE Line
     | Line
+    | Syntax
+
+Syntax:
+     INCLUDES
+    | MAIN
     ;
 
 Line:
@@ -87,8 +93,6 @@ int main(int argc, char *argv[]) {
    }
    else
     yyin = stdin;
-
-
 
     while (!feof(yyin)){
       return yyparse();

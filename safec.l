@@ -11,9 +11,14 @@ digit [0-9]
 integer {digit}+
 real {integer}("."{integer})?
 
+includes .*#include.*
+main .*main.*
+
 %%
 
 {white} { /* We ignore white characters */ }
+{includes} {return(INCLUDES); }
+{main} {return(MAIN); }
 {real}  { yylval = atof(yytext); return(NUMBER); }
 
 "sqrt"  { return(SQRT); }
