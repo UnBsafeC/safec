@@ -6,6 +6,7 @@
 
 extern int line_number;
 extern FILE *yyin;
+extern node * list;
 int division_by_zero = 0;
 
 void check_division_by_zero(int num){
@@ -15,10 +16,20 @@ void check_division_by_zero(int num){
   }
 }
 
+ void add_symbol_to_table (char symbol){
+ }
+
 %}
 
+%union {
+  double val;
+  char *symbol;
+}
+
+
 %token DIVIDE TIMES PLUS MINUS POW SQRT
-%token NUMBER END
+%token <val> NUMBER
+%token END
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS COMMA
 
 %left PLUS MINUS
@@ -27,14 +38,18 @@ void check_division_by_zero(int num){
 
 %token END_FILE START_FILE
 %token INCLUDES MAIN
-%token VARIABLE
+
+%token INT FLOAT DOT_COMMA
+
+%token <symbol> VARIABLE
+%type <val> Expression
 
 %start Input
 
 %%
 
 Input:
-    | Input Stream
+     | Input Stream
 
 Stream:
     END_FILE
@@ -49,12 +64,12 @@ Syntax:
 
 Line:
     END
+    | Declaration
     | Expression {
         if(division_by_zero == 0)
             printf("Resultado : %f\n", $1);
         check_division_by_zero(division_by_zero);
       }
-    | Declaration
 
 Expression:
    NUMBER                                               { $$=$1; }
@@ -77,8 +92,14 @@ Expression:
    | LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS      { $$=$2; }
    ;
 
+/* Por enquanto estamos pegando apenas variaveis to tipo int e float,
+mas basta adicionar os tokens para os outros tipos */
 Declaration:
-    VARIABLE {printf("Declaração de variavel encontrada !!\n"); }
+    /* Verificar porque $1[0] não é uma string */
+    VARIABLE       {puts ("SYMBOL"); puts($1);}
+    | INT Declaration DOT_COMMA
+    | FLOAT Declaration DOT_COMMA
+    ;
 
 %%
 

@@ -1,6 +1,7 @@
 %{
 #include "global.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include "sintatico.h"
 int line_number=1;
 extern node *list;
@@ -14,20 +15,16 @@ real {integer}("."{integer})?
 includes .*#include.*
 main .*main.*
 
-types (int)|(float)|(double)|(char)
-variables {types}.([a-z])\;
+only_variable_name [a-z]*
 
 
 %%
 
-{white} { /* We ignore white characters */ }
-{includes} {return(INCLUDES); }
-{main} {return(MAIN); }
-{real}  { yylval = atof(yytext); return(NUMBER); }
-{variables} { return(VARIABLE); }
-
 "sqrt"  { return(SQRT); }
 "pow"   { return(POW); }
+"int"   { return(INT); }
+"float" { return(FLOAT); }
+
 ","     { return(COMMA); }
 "*"     { return(TIMES); }
 "/"     { return(DIVIDE); }
@@ -38,7 +35,14 @@ variables {types}.([a-z])\;
 "{"     { return(START_FILE); }
 "}"     { return(END_FILE); }
 "\n"    { return(END); }
+";"     { return(DOT_COMMA); }
 
+
+{white} { /* We ignore white characters */ }
+{includes} {return(INCLUDES); }
+{main} {return(MAIN); }
+{real}  { yylval.val = atof(yytext); return(NUMBER); }
+{only_variable_name} { yylval.symbol = strndup(yytext,40); return(VARIABLE); }
 %%
 
 yywrap(){
