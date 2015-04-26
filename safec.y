@@ -16,7 +16,10 @@ void check_division_by_zero(int num){
   }
 }
 
- void add_symbol_to_table (char symbol){
+ void add_symbol_to_table (char * symbol){
+    list = (node *) malloc(sizeof(node));
+    insert_symbol(list,symbol);
+    find_symbol(list,symbol);
  }
 
 %}
@@ -95,8 +98,7 @@ Expression:
 /* Por enquanto estamos pegando apenas variaveis to tipo int e float,
 mas basta adicionar os tokens para os outros tipos */
 Declaration:
-    /* Verificar porque $1[0] não é uma string */
-    VARIABLE       {puts ("SYMBOL"); puts($1);}
+    VARIABLE       { add_symbol_to_table(($1));}
     | INT Declaration DOT_COMMA
     | FLOAT Declaration DOT_COMMA
     ;
