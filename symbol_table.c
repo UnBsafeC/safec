@@ -17,7 +17,7 @@ int is_empty(node *list_node ){
     return 0;
 }
 
-void insert_symbol(node *list_node, char symbol[40]){
+void insert_symbol(node *list_node){
 
     node *new_node = (node *) malloc(sizeof(node));
 
@@ -26,11 +26,13 @@ void insert_symbol(node *list_node, char symbol[40]){
         exit(1);
     }
 
+
     node *temp_node = list_node->next;
     list_node->next = new_node;
 
     new_node->next = temp_node;
-    strcpy(new_node->symbol, symbol);
+    const char *symbol = list_node->symbol;
+    new_node->symbol = list_node->symbol;
 }
 
 node *find_symbol(node *node, char symbol[40]){

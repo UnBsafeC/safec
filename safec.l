@@ -15,7 +15,7 @@ real {integer}("."{integer})?
 includes .*#include.*
 main .*main.*
 
-only_variable_name [a-z]*
+declaration_or_attribution [a-z]*(=[1-9]*)?
 
 
 %%
@@ -42,7 +42,7 @@ only_variable_name [a-z]*
 {includes} {return(INCLUDES); }
 {main} {return(MAIN); }
 {real}  { yylval.val = atof(yytext); return(NUMBER); }
-{only_variable_name} { yylval.symbol = strndup(yytext,40); return(VARIABLE); }
+{declaration_or_attribution} { yylval.symbol = strndup(yytext,40); return(VARIABLE); }
 %%
 
 yywrap(){

@@ -9,8 +9,10 @@
 #define FALSE 0
 typedef struct Node{
 
-    char symbol[40];
+    char *symbol;
     struct Node *next;
+    int inicialized;
+    int value;
     int id;
 }node;
 
@@ -24,7 +26,7 @@ void create_list(node *list);
 
 int is_empty(node *list_node );
 
-void insert_symbol(node *list_node, char symbol[40]);
+void insert_symbol(node *list_node);
 
 node *find_symbol(node *node, char symbol[40]);
 

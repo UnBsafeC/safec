@@ -16,17 +16,62 @@ void check_division_by_zero(int num){
   }
 }
 
+
+char * clean_symbol(char *symbol){
+  char *pch;
+  pch = strtok(symbol,"=");
+  return pch;
+}
+
  void add_symbol_to_table (char * symbol){
-    list = (node *) malloc(sizeof(node));
-    insert_symbol(list,symbol);
-    find_symbol(list,symbol);
+    node *new_node = (node *) malloc(sizeof(node));
+    create_list(new_node);
+    new_node->symbol = symbol;
+    new_node->inicialized = 0;
+    new_node->value = 0;
+    if (check_attribution(symbol)){
+      new_node->inicialized = 1;
+      new_node->value=return_atribution_value(symbol);
+      new_node->symbol = clean_symbol(symbol);
+    }
+
+    insert_symbol(new_node);
+    find_symbol(new_node,symbol);
  }
+
+
+int check_attribution(char * symbol){
+
+  int count = 0;
+  while(symbol[count] != '\0'){
+    if (symbol[count] == '=')
+      return 1;
+  count++;
+  }
+  return 0;
+}
+
+int return_atribution_value(char * symbol){
+
+  int count = 0;
+  int value;
+  while(symbol[count] != '\0'){
+    if (symbol[count+1] && symbol[count] == '=')
+      value = symbol[count+1] - '0';
+  count++;
+  }
+  return value;
+}
+
+
 
 %}
 
 %union {
   double val;
   char *symbol;
+  int inicialized;
+  int value;
 }
 
 
