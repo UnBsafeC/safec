@@ -22,11 +22,11 @@ node *node_iterator;
 node *current_node;
 node *next_node;
 
-void create_list(node *list);
+node * create_list();
 
 int is_empty(node *list_node );
 
-void insert_symbol(node *list_node);
+void insert_symbol(node *list_node, node *new_node);
 
 node *find_symbol(node *node, char symbol[40]);
 

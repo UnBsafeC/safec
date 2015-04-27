@@ -18,14 +18,14 @@ void check_division_by_zero(int num){
 
 
 char * clean_symbol(char *symbol){
-  char *pch;
-  pch = strtok(symbol,"=");
-  return pch;
+  char *split_symbol;
+  split_symbol = strtok(symbol,"=");
+  return split_symbol;
 }
 
  void add_symbol_to_table (char * symbol){
     node *new_node = (node *) malloc(sizeof(node));
-    create_list(new_node);
+    list = create_list();
     new_node->symbol = symbol;
     new_node->inicialized = 0;
     new_node->value = 0;
@@ -35,8 +35,8 @@ char * clean_symbol(char *symbol){
       new_node->symbol = clean_symbol(symbol);
     }
 
-    insert_symbol(new_node);
-    find_symbol(new_node,symbol);
+    insert_symbol(list, new_node);
+    find_symbol(list,symbol);
  }
 
 
@@ -143,7 +143,10 @@ Expression:
 /* Por enquanto estamos pegando apenas variaveis to tipo int e float,
 mas basta adicionar os tokens para os outros tipos */
 Declaration:
-    VARIABLE       { add_symbol_to_table(($1));}
+    VARIABLE       {
+                      add_symbol_to_table(($1));
+                      find_symbol(list,$1);
+                   }
     | INT Declaration DOT_COMMA
     | FLOAT Declaration DOT_COMMA
     ;

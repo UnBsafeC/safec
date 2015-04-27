@@ -5,8 +5,10 @@
 #define TRUE 1
 #define FALSE 0
 
-void create_list(node *list){
+node * create_list(){
+    node *list = (node *) malloc(sizeof(node));
     list->next = NULL;
+    return list;
 }
 
 int is_empty(node *list_node ){
@@ -17,22 +19,18 @@ int is_empty(node *list_node ){
     return 0;
 }
 
-void insert_symbol(node *list_node){
+void insert_symbol(node *list_node, node *new_node){
 
-    node *new_node = (node *) malloc(sizeof(node));
 
     if(!new_node){
         printf("\nSEM MEMORIA DISPONIVEL \n");
         exit(1);
     }
 
-
     node *temp_node = list_node->next;
     list_node->next = new_node;
 
     new_node->next = temp_node;
-    const char *symbol = list_node->symbol;
-    new_node->symbol = list_node->symbol;
 }
 
 node *find_symbol(node *node, char symbol[40]){
