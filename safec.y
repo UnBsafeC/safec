@@ -36,8 +36,7 @@ char * clean_symbol(char *symbol){
     }
 
     insert_symbol(list, new_node);
-    find_symbol(list,symbol);
- }
+}
 
 
 int check_attribution(char * symbol){
@@ -63,7 +62,20 @@ int return_atribution_value(char * symbol){
   return value;
 }
 
+int check_vulnerability(node * list, char symbol[40]){
 
+  node * check_node = find_symbol(list, symbol);
+
+  if(check_node){
+
+  if(check_node->inicialized)
+    return 0;
+
+  return 1;
+  }
+  else
+   return 0;
+}
 
 %}
 
@@ -144,8 +156,13 @@ Expression:
 mas basta adicionar os tokens para os outros tipos */
 Declaration:
     VARIABLE       {
-                      add_symbol_to_table(($1));
-                      find_symbol(list,$1);
+                      int result = check_vulnerability(list,$1);
+                      if(result){
+                        puts("Vulnerabilidade encontrada");
+                        yywrap();
+                      }
+                      else
+                        add_symbol_to_table(($1));
                    }
     | INT Declaration DOT_COMMA
     | FLOAT Declaration DOT_COMMA

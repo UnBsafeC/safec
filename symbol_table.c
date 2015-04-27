@@ -13,7 +13,7 @@ node * create_list(){
 
 int is_empty(node *list_node ){
 
-    if (list_node->next == NULL)
+    if (list_node == NULL)
         return 1;
 
     return 0;
@@ -38,11 +38,11 @@ node *find_symbol(node *node, char symbol[40]){
     int search_completed = FALSE;
 
     if( is_empty(node) ){
-        puts("\nLista Vazia\n");
         return 0;
     }
 
     node_iterator = node->next;
+
 
     while(node_iterator != NULL){
 
@@ -57,7 +57,7 @@ node *find_symbol(node *node, char symbol[40]){
 
     if( search_completed == FALSE){
         printf("Simbolo %s nao encontrado \n",symbol);
-        return 0;
+        return NULL;
     }
 }
 
