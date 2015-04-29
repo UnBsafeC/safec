@@ -34,7 +34,7 @@ declaration_or_attribution [a-z]*(=[1-9]*)?
 ")"     { return(RIGHT_PARENTHESIS); }
 "{"     { return(START_FILE); }
 "}"     { return(END_FILE); }
-"\n"    { return(END); }
+"\n"    { ++line_number; return(END); }
 ";"     { return(DOT_COMMA); }
 
 
