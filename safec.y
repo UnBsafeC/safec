@@ -62,6 +62,9 @@ int return_atribution_value(char * symbol){
 
 int check_vulnerability(node * list, char symbol[40]){
 
+    if(check_attribution(symbol))
+        return 0;
+
     node * check_node = find_symbol(list, symbol);
 
     if(check_node){
@@ -151,9 +154,8 @@ Expression:
 Declaration
     : VARIABLE        {
                         int result = check_vulnerability(list,$1);
-                        if(result){
+                        if(result)
                             puts("Vulnerabilidade encontrada");
-                        }
                         else
                             add_symbol_to_table(($1));
                      }
