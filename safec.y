@@ -16,53 +16,26 @@ void check_division_by_zero(int num){
     }
 }
 
-
-char * clean_symbol(char *symbol){
-    char *split_symbol;
-    split_symbol = strtok(symbol,"=");
-    return split_symbol;
-}
-
-void add_symbol_to_table (char * symbol){
+void add_symbol_to_table (char * symbol,int flag_atribution,int value){
     node *new_node = (node *) malloc(sizeof(node));
     list = create_list();
     new_node->symbol = symbol;
     new_node->inicialized = 0;
     new_node->value = 0;
-    if (check_attribution(symbol)){
+    if (flag_atribution){
         new_node->inicialized = 1;
-        new_node->value=return_atribution_value(symbol);
-        new_node->symbol = clean_symbol(symbol);
+        new_node->value=value;
+        new_node->symbol = symbol;
     }
 
     insert_symbol(list, new_node);
 }
 
 
-int check_attribution(char * symbol){
-    int count = 0;
-    while(symbol[count] != '\0'){
-        if (symbol[count] == '=')
-            return 1;
-        count++;
-    }
-    return 0;
-}
+int check_vulnerability(node * list, char symbol[40],int flag_atribution)
+{
 
-int return_atribution_value(char * symbol){
-    int count = 0;
-    int value;
-    while(symbol[count] != '\0'){
-        if (symbol[count+1] && symbol[count] == '=')
-            value = symbol[count+1] - '0';
-        count++;
-    }
-    return value;
-}
-
-int check_vulnerability(node * list, char symbol[40]){
-
-    if(check_attribution(symbol))
+    if(flag_atribution)
         return 0;
 
     node * check_node = find_symbol(list, symbol);
@@ -76,6 +49,16 @@ int check_vulnerability(node * list, char symbol[40]){
     }
     return 0;
 }
+
+int check_uninitialized_vars(node * list, int atribution, char * symbol, int symbol_value)
+{
+    int result = check_vulnerability(list, symbol, atribution);
+    if(result)
+        puts("Vulnerabilidade encontrada");
+    else
+        add_symbol_to_table(symbol, atribution, symbol_value);
+}
+
 
 %}
 
@@ -99,7 +82,7 @@ int check_vulnerability(node * list, char symbol[40]){
 %token END_FILE START_FILE
 %token INCLUDES MAIN
 
-%token INT FLOAT DOT_COMMA
+%token INT FLOAT DOT_COMMA EQUALS
 
 %token <symbol> VARIABLE
 %type <val> Expression
@@ -111,19 +94,19 @@ int check_vulnerability(node * list, char symbol[40]){
 Input:
     | Input Stream
 
-Stream:
-    END_FILE
+Stream
+    : END_FILE
     | START_FILE Line
     | Line
     | Syntax
 
-Syntax:
-     INCLUDES
+Syntax
+    :INCLUDES
     | MAIN
     ;
 
-Line:
-    END
+Line
+    :END
     | Declaration
     | Expression {
                     if(division_by_zero == 0)
@@ -131,19 +114,21 @@ Line:
                     check_division_by_zero(division_by_zero);
                  }
 
-Expression:
-   NUMBER                                               { $$=$1; }
+Expression
+   : NUMBER                                               { $$=$1; }
    | SQRT LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS { $$=sqrt($3); }
    | POW LEFT_PARENTHESIS Expression COMMA Expression RIGHT_PARENTHESIS { $$=pow($3,$5); }
    | Expression PLUS Expression                         { $$=$1+$3; }
    | Expression MINUS Expression                        { $$=$1-$3; }
    | Expression TIMES Expression                        { $$=$1*$3; }
    | Expression DIVIDE Expression   {
-                                        if($3 == 0.0){
+                                        if($3 == 0.0)
+                                        {
                                             division_by_zero = 1;
                                             $$ = 0;
                                         }
-                                        else{
+                                        else
+                                        {
                                             $$ = $1/$3;
                                         }
                                     }
@@ -152,16 +137,20 @@ Expression:
    ;
 
 Declaration
-    : VARIABLE        {
-                        int result = check_vulnerability(list,$1);
-                        if(result)
-                            puts("Vulnerabilidade encontrada");
-                        else
-                            add_symbol_to_table(($1));
-                     }
-    | INT Declaration DOT_COMMA
-    | FLOAT Declaration DOT_COMMA
-    | DOT_COMMA
+    : DOT_COMMA
+    | INT Atribution DOT_COMMA
+    | FLOAT Atribution DOT_COMMA
+    | Atribution DOT_COMMA
+    ;
+Atribution
+    :VARIABLE                {
+                                int atribution = 0;
+                                check_uninitialized_vars(list, atribution, $1, 0);
+                             }
+    | VARIABLE EQUALS NUMBER {
+                                int atribution = 1;
+                                check_uninitialized_vars(list, atribution, $1, $3);
+                             }
     ;
 
 %%

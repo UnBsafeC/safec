@@ -15,7 +15,7 @@ real {integer}("."{integer})?
 includes .*#include.*
 main .*main.*
 
-declaration_or_attribution [a-z]*(=[1-9]*)?
+word [a-z]*
 
 
 %%
@@ -30,6 +30,8 @@ declaration_or_attribution [a-z]*(=[1-9]*)?
 "/"     { return(DIVIDE); }
 "-"     { return(MINUS); }
 "+"     { return(PLUS); }
+"="     { return(EQUALS); }
+
 "("     { return(LEFT_PARENTHESIS); }
 ")"     { return(RIGHT_PARENTHESIS); }
 "{"     { return(START_FILE); }
@@ -42,7 +44,7 @@ declaration_or_attribution [a-z]*(=[1-9]*)?
 {includes} {return(INCLUDES); }
 {main} {return(MAIN); }
 {real}  { yylval.val = atof(yytext); return(NUMBER); }
-{declaration_or_attribution} { yylval.symbol = strndup(yytext,40); return(VARIABLE); }
+{word} { yylval.symbol = strndup(yytext,40); return(VARIABLE); }
 %%
 
 yywrap(){
