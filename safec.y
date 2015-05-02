@@ -18,7 +18,6 @@ void check_division_by_zero(int num){
 
 void add_symbol_to_table (char * symbol,int flag_atribution,int value){
     node *new_node = (node *) malloc(sizeof(node));
-    list = create_list();
     new_node->symbol = symbol;
     new_node->inicialized = 0;
     new_node->value = 0;
@@ -56,7 +55,9 @@ int check_uninitialized_vars(node * list, int atribution, char * symbol, int sym
     if(result)
         puts("Vulnerabilidade encontrada");
     else
+        {
         add_symbol_to_table(symbol, atribution, symbol_value);
+        }
 }
 
 
@@ -172,6 +173,7 @@ int main(int argc, char *argv[]) {
    else
     yyin = stdin;
 
+    list = create_list();
     while (!feof(yyin)){
       return yyparse();
     }

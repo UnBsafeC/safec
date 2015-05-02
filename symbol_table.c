@@ -48,7 +48,6 @@ node *find_symbol(node *node, char symbol[40]){
 
       if( strcmp(symbol, node_iterator->symbol) == 0){
         search_completed = TRUE;
-        printf("Simbolo %s encontrado! \n",node_iterator->symbol);
         return node_iterator;
       }
 
@@ -56,7 +55,6 @@ node *find_symbol(node *node, char symbol[40]){
     }
 
     if( search_completed == FALSE){
-        printf("Simbolo %s nao encontrado \n",symbol);
         return NULL;
     }
 }
