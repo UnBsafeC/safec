@@ -13,7 +13,7 @@ node * create_list(){
 
 int is_empty(node *list_node ){
 
-    if (list_node == NULL)
+    if (list_node->next == NULL)
         return 1;
 
     return 0;

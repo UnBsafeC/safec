@@ -8,6 +8,8 @@ safec: safec.l safec.y
 
 test: clean safec
 	tests/run_all
+	gcc -o suite_test test_symbol_table.c -lcunit
+	./suite_test
 
 clean:
 	rm lexico.* sintatico.* safec
