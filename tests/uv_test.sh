@@ -32,4 +32,16 @@ test_several_uninitialized_variables()
   assertEquals  "$answer"   "$out"
 }
 
+test_initialized_var_with_simple_expression()
+{
+  out="$(echo  $initialized_var_with_simple_expression | ./safec)"
+  assertEquals  ""   "$out"
+}
+
+test_initialized_var_with_more_complex_expression()
+{
+  out="$(echo  $initialized_var_with_more_complex_expression | ./safec)"
+  assertEquals  ""   "$out"
+}
+
 load_shunit2

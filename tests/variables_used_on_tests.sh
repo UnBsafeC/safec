@@ -28,3 +28,16 @@ several_uninitialized_vars="
     c;
     b = 5;
 }"
+
+initialized_var_with_simple_expression="
+{
+    int a;
+    a = 2+2;
+}"
+
+initialized_var_with_more_complex_expression="
+{
+    int a;
+    a = sqrt(pow(((2*4)/3),2)-1);
+}"
+

@@ -144,14 +144,14 @@ Declaration
     | Atribution DOT_COMMA
     ;
 Atribution
-    :VARIABLE                {
-                                int atribution = 0;
-                                check_uninitialized_vars(list, atribution, $1, 0);
-                             }
-    | VARIABLE EQUALS NUMBER {
-                                int atribution = 1;
-                                check_uninitialized_vars(list, atribution, $1, $3);
-                             }
+    :VARIABLE                    {
+                                    int atribution = 0;
+                                    check_uninitialized_vars(list, atribution, $1, 0);
+                                 }
+    | VARIABLE EQUALS Expression {
+                                    int atribution = 1;
+                                    check_uninitialized_vars(list, atribution, $1, $3);
+                                 }
     ;
 
 %%
