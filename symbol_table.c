@@ -59,6 +59,34 @@ node *find_symbol(node *node, char symbol[40]){
     }
 }
 
+node *find_by_scope(node *node, char scope[40], char symbol[40]){
+
+    int search_completed = FALSE;
+
+    if( is_empty(node) ){
+        return 0;
+    }
+
+    node_iterator = node->next;
+
+
+    while(node_iterator != NULL){
+
+    if(strcmp(scope, node_iterator->scope) == 0){
+      if( strcmp(symbol, node_iterator->symbol) == 0){
+            search_completed = TRUE;
+            return node_iterator;
+            }
+      }
+
+      node_iterator = node_iterator->next;
+    }
+
+    if( search_completed == FALSE){
+        return NULL;
+    }
+}
+
 void destroy_list(node *node){
 
     if ( !is_empty(node) ){

@@ -21,6 +21,13 @@ void add_symbol_to_table (char * symbol,int flag_atribution,int value){
     new_node->symbol = symbol;
     new_node->inicialized = 0;
     new_node->value = 0;
+
+
+    if (list->next->scope != "")
+        new_node->scope = list->next->scope;
+    else
+        new_node->scope = "";
+
     if (flag_atribution){
         new_node->inicialized = 1;
         new_node->value=value;
@@ -37,19 +44,20 @@ int check_vulnerability(node * list, char symbol[40],int flag_atribution)
     if(flag_atribution)
         return 0;
 
-    node * check_node = find_symbol(list, symbol);
+    node * check_node = find_by_scope(list, list->next->scope, symbol);
 
     if(check_node){
 
+
         if(check_node->inicialized)
             return 0;
-
-        return 1;
+        else
+            return 1;
     }
     return 0;
 }
 
-int check_uninitialized_vars(node * list, int atribution, char * symbol, int symbol_value)
+void check_uninitialized_vars(node * list, int atribution, char * symbol, int symbol_value)
 {
     int result = check_vulnerability(list, symbol, atribution);
     if(result)
@@ -60,12 +68,22 @@ int check_uninitialized_vars(node * list, int atribution, char * symbol, int sym
         }
 }
 
+void set_scope(char *symbol)
+{
+    node *new_node = (node *) malloc(sizeof(node));
+    new_node->symbol = symbol;
+    new_node->scope = symbol;
+    insert_symbol(list, new_node);
+}
+
+
 
 %}
 
 %union {
     double val;
     char *symbol;
+    char *scope;
     int inicialized;
     int value;
 }
@@ -142,9 +160,12 @@ Declaration
     | INT Atribution DOT_COMMA
     | FLOAT Atribution DOT_COMMA
     | Atribution DOT_COMMA
+    | INT Atribution
+    | Atribution
     ;
 Atribution
-    :VARIABLE                    {
+    : END_FILE
+    | VARIABLE                    {
                                     int atribution = 0;
                                     check_uninitialized_vars(list, atribution, $1, 0);
                                  }
@@ -152,8 +173,27 @@ Atribution
                                     int atribution = 1;
                                     check_uninitialized_vars(list, atribution, $1, $3);
                                  }
+    | Method
     ;
 
+Method
+
+    : VARIABLE LEFT_PARENTHESIS VARIABLE RIGHT_PARENTHESIS START_FILE {
+                                                             set_scope($1);
+
+                                                             }
+    | VARIABLE LEFT_PARENTHESIS VARIABLE RIGHT_PARENTHESIS DOT_COMMA {
+                                                    node * check_node = find_by_scope(list, $1,$3);
+                                                    if (check_node->inicialized)
+                                                        puts("Tudo Ok");
+                                                    else
+                                                        printf("Variavel: %s, no escopo da funcao: %s, nao foi inicializada\n", $3,$1);
+
+                                                                     }
+
+    | VARIABLE LEFT_PARENTHESIS RIGHT_PARENTHESIS START_FILE {
+                                                             set_scope($1);
+                                                            }
 %%
 
 int yyerror(char *message) {
