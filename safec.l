@@ -13,7 +13,6 @@ integer {digit}+
 real {integer}("."{integer})?
 
 includes .*#include.*
-main .*main.*
 
 word [a-z]*
 
@@ -42,7 +41,6 @@ word [a-z]*
 
 {white} { /* We ignore white characters */ }
 {includes} {return(INCLUDES); }
-{main} {return(MAIN); }
 {real}  { yylval.val = atof(yytext); return(NUMBER); }
 {word} { yylval.symbol = strndup(yytext,40); return(VARIABLE); }
 %%

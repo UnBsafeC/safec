@@ -22,11 +22,11 @@ void add_symbol_to_table (char * symbol,int flag_atribution,int value){
     new_node->inicialized = 0;
     new_node->value = 0;
 
-
     if (list->next->scope != "")
         new_node->scope = list->next->scope;
     else
         new_node->scope = "";
+
 
     if (flag_atribution){
         new_node->inicialized = 1;
@@ -44,10 +44,9 @@ int check_vulnerability(node * list, char symbol[40],int flag_atribution)
     if(flag_atribution)
         return 0;
 
-    node * check_node = find_by_scope(list, list->next->scope, symbol);
+    node * check_node = find_symbol(list, symbol);
 
     if(check_node){
-
 
         if(check_node->inicialized)
             return 0;
@@ -99,7 +98,7 @@ void set_scope(char *symbol)
 %left NEG
 
 %token END_FILE START_FILE
-%token INCLUDES MAIN
+%token INCLUDES
 
 %token INT FLOAT DOT_COMMA EQUALS
 
@@ -121,17 +120,16 @@ Stream
 
 Syntax
     :INCLUDES
-    | MAIN
     ;
 
 Line
     :END
-    | Declaration
     | Expression {
                     if(division_by_zero == 0)
                     printf("Resultado : %f\n", $1);
                     check_division_by_zero(division_by_zero);
                  }
+    | Declaration
 
 Expression
    : NUMBER                                               { $$=$1; }
@@ -156,15 +154,13 @@ Expression
    ;
 
 Declaration
-    : DOT_COMMA
-    | INT Atribution DOT_COMMA
-    | FLOAT Atribution DOT_COMMA
-    | Atribution DOT_COMMA
-    | INT Atribution
-    | Atribution
+    :  END_FILE
+    |  INT Atribution
+    |  Atribution
     ;
+
 Atribution
-    : END_FILE
+    : DOT_COMMA
     | VARIABLE                    {
                                     int atribution = 0;
                                     check_uninitialized_vars(list, atribution, $1, 0);
@@ -177,17 +173,13 @@ Atribution
     ;
 
 Method
-
     : VARIABLE LEFT_PARENTHESIS VARIABLE RIGHT_PARENTHESIS START_FILE {
                                                              set_scope($1);
-
                                                              }
     | VARIABLE LEFT_PARENTHESIS VARIABLE RIGHT_PARENTHESIS DOT_COMMA {
                                                     node * check_node = find_by_scope(list, $1,$3);
-                                                    if (check_node->inicialized)
-                                                        puts("Tudo Ok");
-                                                    else
-                                                        printf("Variavel: %s, no escopo da funcao: %s, nao foi inicializada\n", $3,$1);
+                                                    if (!check_node->inicialized)
+                                                        printf("Variavel %s, no escopo da funcao: %s, nao foi inicializada\n",$3,$1);
 
                                                                      }
 
