@@ -1,8 +1,8 @@
 %{
 #include "global.h"
+#include "sintatico.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "sintatico.h"
 int line_number=1;
 extern node *list;
 %}

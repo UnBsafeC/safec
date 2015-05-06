@@ -1,9 +1,9 @@
 %{
 #include "global.h"
+#include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "parser.h"
 
 extern int line_number;
 extern FILE *yyin;
