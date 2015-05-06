@@ -4,7 +4,7 @@ safec: safec.l safec.y
 	mv safec.tab.c sintatico.c
 	flex safec.l
 	mv lex.yy.c lexico.c
-	gcc -o safec -lm sintatico.c lexico.c symbol_table.c
+	gcc -o safec -lm sintatico.c lexico.c symbol_table.c parser.c
 
 test: safec
 	tests/run_all

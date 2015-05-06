@@ -3,78 +3,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "parser.h"
 
 extern int line_number;
 extern FILE *yyin;
 extern node * list;
 int division_by_zero = 0;
 
-void check_division_by_zero(int num){
-    if (num == 1){
-        printf("Divisão por zero encontrada!!\n");
-        division_by_zero = 0;
-    }
-}
-
-void add_symbol_to_table (char * symbol,int flag_atribution,int value){
-    node *new_node = (node *) malloc(sizeof(node));
-    new_node->symbol = symbol;
-    new_node->inicialized = 0;
-    new_node->value = 0;
-
-    if (list->next->scope != "")
-        new_node->scope = list->next->scope;
-    else
-        new_node->scope = "";
-
-
-    if (flag_atribution){
-        new_node->inicialized = 1;
-        new_node->value=value;
-        new_node->symbol = symbol;
-    }
-
-    insert_symbol(list, new_node);
-}
-
-
-int check_vulnerability(node * list, char symbol[40],int flag_atribution)
-{
-
-    if(flag_atribution)
-        return 0;
-
-    node * check_node = find_symbol(list, symbol);
-
-    if(check_node){
-
-        if(check_node->inicialized)
-            return 0;
-        else
-            return 1;
-    }
-    return 0;
-}
-
-void check_uninitialized_vars(node * list, int atribution, char * symbol, int symbol_value)
-{
-    int result = check_vulnerability(list, symbol, atribution);
-    if(result)
-        puts("Vulnerabilidade encontrada");
-    else
-        {
-        add_symbol_to_table(symbol, atribution, symbol_value);
+void check_division_by_zero(int num)
+    {
+        if (num == 1){
+            printf("Divisão por zero encontrada!!\n");
+            division_by_zero = 0;
         }
-}
-
-void set_scope(char *symbol)
-{
-    node *new_node = (node *) malloc(sizeof(node));
-    new_node->symbol = symbol;
-    new_node->scope = symbol;
-    insert_symbol(list, new_node);
-}
-
+    }
 
 
 %}
@@ -126,7 +68,7 @@ Line
     :END
     | Expression {
                     if(division_by_zero == 0)
-                    printf("Resultado : %f\n", $1);
+                        printf("Resultado : %f\n", $1);
                     check_division_by_zero(division_by_zero);
                  }
     | Declaration
@@ -177,15 +119,14 @@ Method
                                                              set_scope($1);
                                                              }
     | VARIABLE LEFT_PARENTHESIS VARIABLE RIGHT_PARENTHESIS DOT_COMMA {
-                                                    node * check_node = find_by_scope(list, $1,$3);
-                                                    if (!check_node->inicialized)
-                                                        printf("Variavel %s, no escopo da funcao: %s, nao foi inicializada\n",$3,$1);
+                                                        node * check_node = find_by_scope(list, $1,$3);
+                                                        if (!check_node->inicialized)
+                                                            printf("Variavel %s, no escopo da funcao: %s, nao foi inicializada\n",$3,$1);
 
                                                                      }
-
     | VARIABLE LEFT_PARENTHESIS RIGHT_PARENTHESIS START_FILE {
-                                                             set_scope($1);
-                                                            }
+                                                                set_scope($1);
+                                                             }
 %%
 
 int yyerror(char *message) {
