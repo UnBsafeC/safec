@@ -6,7 +6,7 @@ CFLAGS2=-I$(SOURCE) -lm
 COMPILER=gcc
 
 safec: bison/safec.l bison/safec.y
-	bison -d bison/safec.y
+	bison -d -v bison/safec.y
 	mv safec.tab.h headers/sintatico.h
 	mv safec.tab.c source/sintatico.c
 	flex bison/safec.l
