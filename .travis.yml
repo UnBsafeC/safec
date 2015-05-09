@@ -1,7 +1,10 @@
 language: bash
 
-before_script:
-        - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
 
+before_script:
+        - sudo apt-get install make
+        - sudo apt-get install libcunit1 libcunit1-dev
+        - sudo apt-get install moreutils
+        - sudo apt-get install shunit2
 script:
-        - bash make test
+        - make test
