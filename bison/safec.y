@@ -30,21 +30,16 @@ void check_division_by_zero(int num)
 }
 
 
-%token DIVIDE TIMES PLUS MINUS POW SQRT
+%token '/' '*' '-' '+' POW SQRT
 %token <val> NUMBER
 %token END
-%token LEFT_PARENTHESIS RIGHT_PARENTHESIS COMMA
+%token '(' ')' ',' '{' '}' ';' '='
+%token INT FLOAT
 
-%left PLUS MINUS
-%left DIVIDE TIMES
-%left NEG
 
-%token END_FILE START_FILE
 %token INCLUDES
 
-%token INT FLOAT DOT_COMMA EQUALS
-
-%token <symbol> VARIABLE
+%token <symbol> IDENTIFIER
 %type <val> Expression
 
 %start Input
@@ -55,8 +50,8 @@ Input:
     | Input Stream
 
 Stream
-    : END_FILE
-    | START_FILE Line
+    : '}'
+    | '{' Line
     | Line
     | Syntax
 
@@ -74,59 +69,52 @@ Line
     | Declaration
 
 Expression
-   : NUMBER                                               { $$=$1; }
-   | SQRT LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS { $$=sqrt($3); }
-   | POW LEFT_PARENTHESIS Expression COMMA Expression RIGHT_PARENTHESIS { $$=pow($3,$5); }
-   | Expression PLUS Expression                         { $$=$1+$3; }
-   | Expression MINUS Expression                        { $$=$1-$3; }
-   | Expression TIMES Expression                        { $$=$1*$3; }
-   | Expression DIVIDE Expression   {
-                                        if($3 == 0.0)
-                                        {
-                                            division_by_zero = 1;
-                                            $$ = 0;
-                                        }
-                                        else
-                                        {
-                                            $$ = $1/$3;
-                                        }
-                                    }
-   | MINUS Expression %prec NEG                         { $$=-$2; }
-   | LEFT_PARENTHESIS Expression RIGHT_PARENTHESIS      { $$=$2; }
+   : NUMBER                                  { $$=$1; }
+   | SQRT '(' Expression ')'                 { $$=sqrt($3); }
+   | POW '(' Expression ',' Expression ')'   { $$=pow($3,$5); }
+   | Expression '+' Expression               { $$=$1+$3; }
+   | Expression '-' Expression               { $$=$1-$3; }
+   | Expression '*' Expression               { $$=$1*$3; }
+   | Expression '/' Expression   {
+         if($3 == 0.0)
+         {
+            division_by_zero = 1;
+            $$ = 0;
+         }
+         else
+            $$ = $1/$3;
+      }
+   | '-' Expression %prec '-'                { $$=-$2; }
+   | '(' Expression ')'                      { $$=$2; }
    ;
 
 Declaration
-    :  END_FILE
-    |  INT Atribution
+    :  INT Atribution
     |  Atribution
     ;
 
 Atribution
-    : DOT_COMMA
-    | VARIABLE                    {
-                                    int atribution = 0;
-                                    check_uninitialized_vars(list, atribution, $1, 0);
-                                 }
-    | VARIABLE EQUALS Expression {
-                                    int atribution = 1;
-                                    check_uninitialized_vars(list, atribution, $1, $3);
-                                 }
+    : ';'
+    | IDENTIFIER  {
+         int atribution = 0;
+         check_uninitialized_vars(list, atribution, $1, 0);
+      }
+    | IDENTIFIER '=' Expression {
+         int atribution = 1;
+         check_uninitialized_vars(list, atribution, $1, $3);
+      }
     | Method
     ;
 
 Method
-    : VARIABLE LEFT_PARENTHESIS VARIABLE RIGHT_PARENTHESIS START_FILE {
-                                                             set_scope($1);
-                                                             }
-    | VARIABLE LEFT_PARENTHESIS VARIABLE RIGHT_PARENTHESIS DOT_COMMA {
-                                                        node * check_node = find_by_scope(list, $1,$3);
-                                                        if (!check_node->inicialized)
-                                                            printf("Variavel %s, no escopo da funcao: %s, nao foi inicializada\n",$3,$1);
-
-                                                                     }
-    | VARIABLE LEFT_PARENTHESIS RIGHT_PARENTHESIS START_FILE {
-                                                                set_scope($1);
-                                                             }
+    : IDENTIFIER '(' IDENTIFIER ')' '{' { set_scope($1); }
+    | IDENTIFIER '(' IDENTIFIER ')' ';' {
+         node * check_node = find_by_scope(list, $1,$3);
+         if (!check_node->inicialized)
+               printf("Variavel %s, no escopo da funcao: %s, nao foi inicializada\n",$3,$1);
+      }
+    | IDENTIFIER '(' ')' '{' { set_scope($1); }
+    ;
 %%
 
 int yyerror(char *message) {

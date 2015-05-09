@@ -3,3 +3,4 @@ run_cunit_tests
 source/sintatico.c
 headers/sintatico.h
 source/lexico.c
+safec.output

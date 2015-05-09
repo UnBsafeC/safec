@@ -24,25 +24,25 @@ word [a-z]*
 "int"   { return(INT); }
 "float" { return(FLOAT); }
 
-","     { return(COMMA); }
-"*"     { return(TIMES); }
-"/"     { return(DIVIDE); }
-"-"     { return(MINUS); }
-"+"     { return(PLUS); }
-"="     { return(EQUALS); }
+","     { return(','); }
+"*"     { return('*'); }
+"/"     { return('/'); }
+"-"     { return('-'); }
+"+"     { return('+'); }
+"="     { return('='); }
 
-"("     { return(LEFT_PARENTHESIS); }
-")"     { return(RIGHT_PARENTHESIS); }
-"{"     { return(START_FILE); }
-"}"     { return(END_FILE); }
+"("     { return('('); }
+")"     { return(')'); }
+"{"     { return('{'); }
+"}"     { return('}'); }
 "\n"    { ++line_number; return(END); }
-";"     { return(DOT_COMMA); }
+";"     { return(';'); }
 
 
 {white} { /* We ignore white characters */ }
 {includes} {return(INCLUDES); }
 {real}  { yylval.val = atof(yytext); return(NUMBER); }
-{word} { yylval.symbol = strndup(yytext,40); return(VARIABLE); }
+{word} { yylval.symbol = strndup(yytext,40); return(IDENTIFIER); }
 %%
 
 yywrap(){
