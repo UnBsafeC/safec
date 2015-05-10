@@ -1,8 +1,8 @@
-. $(dirname $0)/test_helper.sh
+. $(dirname $0)/helper/test_helper.sh
 
 # Use variables_used_on_tests file
  #to declare the variables called after "echo" on each test.
-. $(dirname $0)/variables_used_on_tests.sh
+. $(dirname $0)/helper/variables_used_on_tests.sh
 
 
 test_uninitiliazed_variable()

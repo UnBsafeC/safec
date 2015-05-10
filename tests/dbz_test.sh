@@ -1,4 +1,4 @@
-. $(dirname $0)/test_helper.sh
+. $(dirname $0)/helper/test_helper.sh
 
 test_explicit_and_simple_dbz() {
   out="$(echo {1/0} | ./safec)"

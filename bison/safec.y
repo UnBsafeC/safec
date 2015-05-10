@@ -62,8 +62,6 @@ Syntax
 Line
     :END
     | Expression {
-                    if(division_by_zero == 0)
-                        printf("Resultado : %f\n", $1);
                     check_division_by_zero(division_by_zero);
                  }
     | Declaration
@@ -109,8 +107,12 @@ Atribution
 Method
     : IDENTIFIER '(' IDENTIFIER ')' '{' { set_scope($1); }
     | IDENTIFIER '(' IDENTIFIER ')' ';' {
-         node * check_node = find_by_scope(list, $1,$3);
-         if (!check_node->inicialized)
+
+         node * check_node = find_by_scope(list, list->next->scope, $3);
+         node * scope_node = find_by_scope(list, $1, $3);
+
+         if (!check_node->inicialized )
+            if(!scope_node->inicialized)
                printf("Variavel %s, no escopo da funcao: %s, nao foi inicializada\n",$3,$1);
       }
     | IDENTIFIER '(' ')' '{' { set_scope($1); }

@@ -52,4 +52,3 @@ initialized_var_with_more_complex_expression="
     a = sqrt(pow(((2*4)/3),2)-1);
     }
 }"
-

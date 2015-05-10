@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <math.h>
 
+const true = 1;
+const false = 0;
+
 
 void add_symbol_to_table (char * symbol,int flag_atribution,int value){
     node *new_node = (node *) malloc(sizeof(node));
@@ -27,18 +30,18 @@ int check_vulnerability(node * list, char symbol[40],int flag_atribution)
 {
 
     if(flag_atribution)
-        return 0;
+        return false;
 
-    node * check_node = find_symbol(list, symbol);
+    node * check_node = find_by_scope(list, list->next->scope, symbol);
 
     if(check_node){
 
         if(check_node->inicialized)
-            return 0;
-        else
-            return 1;
+            return false;
+
+        return true;
     }
-    return 0;
+    return false;
 }
 
 void check_uninitialized_vars(node * list, int atribution, char * symbol, int symbol_value)
