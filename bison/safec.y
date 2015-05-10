@@ -21,7 +21,8 @@ void check_division_by_zero(int num)
 
 %}
 
-%union {
+%union
+{
     double val;
     char *symbol;
     char *scope;
@@ -73,15 +74,16 @@ Expression
    | Expression '+' Expression               { $$=$1+$3; }
    | Expression '-' Expression               { $$=$1-$3; }
    | Expression '*' Expression               { $$=$1*$3; }
-   | Expression '/' Expression   {
-         if($3 == 0.0)
-         {
-            division_by_zero = 1;
-            $$ = 0;
-         }
-         else
-            $$ = $1/$3;
-      }
+   | Expression '/' Expression
+        {
+            if($3 == 0.0)
+            {
+                division_by_zero = 1;
+                $$ = 0;
+            }
+            else
+                $$ = $1/$3;
+        }
    | '-' Expression %prec '-'                { $$=-$2; }
    | '(' Expression ')'                      { $$=$2; }
    ;
@@ -93,53 +95,52 @@ Declaration
 
 Atribution
     : ';'
-    | IDENTIFIER  {
-         int atribution = 0;
-         check_uninitialized_vars(list, atribution, $1, 0);
-      }
-    | IDENTIFIER '=' Expression {
-         int atribution = 1;
-         check_uninitialized_vars(list, atribution, $1, $3);
-      }
+    | IDENTIFIER
+        {
+            int atribution = 0;
+            check_uninitialized_vars(list, atribution, $1, 0);
+        }
+    | IDENTIFIER '=' Expression
+        {
+            int atribution = 1;
+            check_uninitialized_vars(list, atribution, $1, $3);
+        }
     | Method
     ;
 
 Method
     : IDENTIFIER '(' IDENTIFIER ')' '{' { set_scope($1); }
-    | IDENTIFIER '(' IDENTIFIER ')' ';' {
-
-         node * check_node = find_by_scope(list, list->next->scope, $3);
-         node * scope_node = find_by_scope(list, $1, $3);
-
-         if (!check_node->inicialized )
-            if(!scope_node->inicialized)
-               printf("Variavel %s, no escopo da funcao: %s, nao foi inicializada\n",$3,$1);
-      }
+    | IDENTIFIER '(' IDENTIFIER ')' ';' { check_scope_vulnerability(list,$1, $3); }
     | IDENTIFIER '(' ')' '{' { set_scope($1); }
     ;
 %%
 
-int yyerror(char *message) {
+int yyerror(char *message)
+{
    printf("Message error: %s (line: %d)\n", message, line_number);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
-   if(argc == 2) {
-      FILE *input = fopen(argv[1],"r");
-      yyin = input;
-    if(input == 0) {
-          printf( "Could not open file\n" );
-          exit -1;
-    }
+    if(argc == 2)
+    {
+        FILE *input = fopen(argv[1],"r");
+        yyin = input;
+        if(input == 0)
+        {
+            printf( "Could not open file\n" );
+            exit -1;
+        }
    }
-   else
-    yyin = stdin;
+    else
+        yyin = stdin;
 
     list = create_list();
-    while (!feof(yyin)){
-      return yyparse();
+    while (!feof(yyin))
+    {
+        return yyparse();
     }
 
-   return 0;
+    return 0;
 }

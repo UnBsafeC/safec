@@ -61,3 +61,13 @@ void set_scope(char *symbol)
     insert_symbol(list, new_node);
 }
 
+void check_scope_vulnerability(node *list, char *method, char *symbol)
+{
+    node * check_node = find_by_scope(list, list->next->scope, symbol);
+    node * scope_node = find_by_scope(list, method, symbol);
+
+    if (!check_node->inicialized )
+        if(!scope_node->inicialized)
+            printf("Variavel %s, no escopo da funcao: %s, nao foi inicializada\n",symbol,method);
+
+}
