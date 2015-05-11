@@ -111,7 +111,7 @@ int delete_node(node *list, char symbol[40]){
     }
  
     while(node_iterator->next != NULL){
-        if(strcmp(symbol, node_iterator->next->symbol) == 0){
+        if(symbol == node_iterator->next->symbol){
             if(node_iterator->next->next == NULL){
                 node_iterator->next = NULL;
                 free(node_iterator->next->next);
