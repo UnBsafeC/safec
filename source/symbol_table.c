@@ -104,7 +104,12 @@ void destroy_list(node *node){
 
 int delete_node(node *list, char symbol[40]){
     node_iterator = list->next;
-    
+    if(symbol == node_iterator->symbol){
+        list->next = node_iterator->next;
+        free(node_iterator->next);
+        return 1;
+    }
+ 
     while(node_iterator->next != NULL){
         if(strcmp(symbol, node_iterator->next->symbol) == 0){
             if(node_iterator->next->next == NULL){
