@@ -129,7 +129,7 @@ void test_find_symbol(void) {
 
 }
 
-void test_print_list(){
+node * create_list_with_three_nodes(){
   list = create_list();
   node *new_node = (node *) malloc(sizeof(node));
   new_node->symbol = "test_symbol";
@@ -143,9 +143,15 @@ void test_print_list(){
   new_node2->symbol = "test_symbol2";
   new_node2->scope = "test_scope2";
   new_node2->value = 2;
+  new_node2->next = NULL;
   insert_symbol(list,new_node);
   insert_symbol(list,new_node1);
   insert_symbol(list,new_node2);
+  return list;
+}
+
+void test_print_list(){
+  list = create_list_with_three_nodes();
   CU_ASSERT_EQUAL(print_list(list), 1);
 }
 
@@ -153,6 +159,22 @@ void test_print_list_empty(){
   list = create_list();
   CU_ASSERT_EQUAL(print_list(list), 0);
 }
+
+void test_delete_first_node(){
+  list = create_list_with_three_nodes();
+  CU_ASSERT_EQUAL(delete_node(list, "test_symbol2"), 1);
+}
+
+void test_delete_middle_node(){
+  list = create_list_with_three_nodes();
+  CU_ASSERT_EQUAL(delete_node(list, "test_symbol1"), 1);
+}
+
+void test_delete_final_node(){
+  list = create_list_with_three_nodes();
+  CU_ASSERT_EQUAL(delete_node(list, "test_symbol"), 1);
+}
+
 /************* Test Runner Code goes here **************/
 
 int main ( void )
@@ -177,7 +199,10 @@ int main ( void )
         (NULL == CU_add_test(pSuite, "Destroy List", test_destroy_list)) ||
         (NULL == CU_add_test(pSuite, "Find Symbols", test_find_symbol)) ||
         (NULL == CU_add_test(pSuite, "Print List", test_print_list)) ||
-        (NULL == CU_add_test(pSuite, "Print List", test_print_list_empty))
+        (NULL == CU_add_test(pSuite, "Print Empty List", test_print_list_empty)) ||
+        (NULL == CU_add_test(pSuite, "Delete First Node", test_delete_first_node))
+       // (NULL == CU_add_test(pSuite, "Delete Middle Node", test_delete_middle_node)) ||
+       // (NULL == CU_add_test(pSuite, "Delete Final Node", test_delete_final_node))
       )
    {
       CU_cleanup_registry();
