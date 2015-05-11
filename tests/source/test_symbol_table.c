@@ -143,7 +143,6 @@ node * create_list_with_three_nodes(){
   new_node2->symbol = "test_symbol2";
   new_node2->scope = "test_scope2";
   new_node2->value = 2;
-  new_node2->next = NULL;
   insert_symbol(list,new_node);
   insert_symbol(list,new_node1);
   insert_symbol(list,new_node2);
@@ -167,12 +166,12 @@ void test_delete_first_node(){
 
 void test_delete_middle_node(){
   list = create_list_with_three_nodes();
-  CU_ASSERT_EQUAL(delete_node(list, "test_symbol1"), 1);
+  CU_ASSERT_EQUAL(delete_node(list, "test_symbol1"), 3);
 }
 
 void test_delete_final_node(){
   list = create_list_with_three_nodes();
-  CU_ASSERT_EQUAL(delete_node(list, "test_symbol"), 1);
+  CU_ASSERT_EQUAL(delete_node(list, "test_symbol"), 2);
 }
 
 /************* Test Runner Code goes here **************/
@@ -200,9 +199,9 @@ int main ( void )
         (NULL == CU_add_test(pSuite, "Find Symbols", test_find_symbol)) ||
         (NULL == CU_add_test(pSuite, "Print List", test_print_list)) ||
         (NULL == CU_add_test(pSuite, "Print Empty List", test_print_list_empty)) ||
-        (NULL == CU_add_test(pSuite, "Delete First Node", test_delete_first_node))
-       // (NULL == CU_add_test(pSuite, "Delete Middle Node", test_delete_middle_node)) ||
-       // (NULL == CU_add_test(pSuite, "Delete Final Node", test_delete_final_node))
+        (NULL == CU_add_test(pSuite, "Delete First Node", test_delete_first_node)) ||
+        (NULL == CU_add_test(pSuite, "Delete Middle Node", test_delete_middle_node)) ||
+        (NULL == CU_add_test(pSuite, "Delete Final Node", test_delete_final_node))
       )
    {
       CU_cleanup_registry();
