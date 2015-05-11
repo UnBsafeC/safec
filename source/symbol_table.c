@@ -114,16 +114,16 @@ int delete_node(node *list, char symbol[40]){
         if(symbol == node_iterator->next->symbol){
             if(node_iterator->next->next == NULL){
                 node_iterator->next = NULL;
-                free(node_iterator->next->next);
-                return 1;
+                free(node_iterator->next);
+                return 2;
             } 
             else{
                 node_iterator->next = node_iterator->next->next;
                 free(node_iterator->next);
-                return 1;
+                return 3;
             }
-        node_iterator = node_iterator->next;
         }
+        node_iterator = node_iterator->next;
     }
     return 0;
 }
