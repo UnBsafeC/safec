@@ -3,6 +3,8 @@
 
 #include "code_table.c"
 
+#include <string.h>
+
 extern line *code_table;
 /* Test Suite setup and cleanup functions: */
 
@@ -105,15 +107,31 @@ void test_find_symbol(void) {
 
 
 void test_write_code_table_sequential(void) {
-    line *line, *line2, *line3;
     code_table = create_code_table();
+    int status=0;
+    char line_content[200];
+    // Refactor, we need work in the best way to implement this.
 
-    insert_line(code_table, "test", 1);
-    insert_line(code_table, "test2", 2);
-    insert_line(code_table, "test3", 3);
+    insert_line(code_table, "test0", 1);
+    insert_line(code_table, "test1", 2);
+    insert_line(code_table, "test2", 3);
 
-    CU_ASSERT_EQUAL(write_code_table(code_table), 1);
+    write_code_table(code_table);
+
+    FILE *file = fopen("output/safe_code.c","r+");
+
+    while (fgets (line_content, 200, file) != NULL) {
+        if(strcmp(line_content,"test0\n") == 0 ||
+           strcmp(line_content,"test1\n") == 0 ||
+           strcmp(line_content,"test2\n") == 0 )
+            status++;
+    }
+
+    CU_ASSERT_EQUAL(status,3);
+
+    fclose(file);
 }
+
 /************* Test Runner Code goes here **************/
 
 int main ( void )
