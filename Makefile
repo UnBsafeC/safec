@@ -2,7 +2,7 @@ ROOT=headers
 SOURCE=source
 TEST_ROOT=tests/source
 CFLAGS=-I$(ROOT) -lm
-CFLAGS2=-I$(SOURCE) -lm
+CFLAGS2=-I$(SOURCE) -lm -g
 COMPILER=gcc
 
 safec: bison/safec.l bison/safec.y
@@ -15,8 +15,10 @@ safec: bison/safec.l bison/safec.y
 
 test: safec
 	tests/run_all
-	$(COMPILER) -o run_cunit_tests $(TEST_ROOT)/test_symbol_table.c -lcunit $(CFLAGS2) $(CFLAGS)
-	./run_cunit_tests
+	$(COMPILER) -o run_cunit_tests_symbol_table $(TEST_ROOT)/test_symbol_table.c -lcunit $(CFLAGS2) $(CFLAGS)
+	$(COMPILER) -o run_cunit_tests_code_table $(TEST_ROOT)/test_code_table.c -lcunit $(CFLAGS2) $(CFLAGS)
+	./run_cunit_tests_symbol_table
+	./run_cunit_tests_code_table
 
 clean:
-	rm source/lexico.c source/sintatico.c headers/sintatico.h safec run_cunit_tests
+	rm source/lexico.c source/sintatico.c headers/sintatico.h safec run_cunit_tests*

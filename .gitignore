@@ -1,5 +1,5 @@
 safec
-run_cunit_tests
+run_cunit_tests*
 source/sintatico.c
 headers/sintatico.h
 source/lexico.c
