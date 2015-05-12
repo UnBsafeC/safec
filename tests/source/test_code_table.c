@@ -3,6 +3,8 @@
 
 #include "code_table.c"
 
+#include <string.h>
+
 extern line *code_table;
 /* Test Suite setup and cleanup functions: */
 
@@ -24,7 +26,8 @@ void test_case_sample(void)
     CU_ASSERT_STRING_EQUAL("string #1", "string #2");
 }
 
-void test_create_code_table(void) {
+void test_create_code_table(void)
+{
     code_table = create_code_table();
 
     CU_ASSERT_NOT_EQUAL(code_table, NULL);
@@ -32,14 +35,16 @@ void test_create_code_table(void) {
     CU_ASSERT_EQUAL(code_table->prev, NULL);
 }
 
-void test_code_table_is_empty(void) {
+void test_code_table_is_empty(void)
+{
     code_table = create_code_table();
 
     CU_ASSERT_EQUAL(code_table_is_empty(code_table), 1);
     CU_ASSERT_NOT_EQUAL(code_table_is_empty(code_table), 0);
 }
 
-void test_insert_sequential_line(void) {
+void test_insert_sequential_line(void)
+{
     line *line, *line2, *line3;
     code_table = create_code_table();
 
@@ -59,7 +64,8 @@ void test_insert_sequential_line(void) {
     CU_ASSERT_NOT_EQUAL(line3, NULL);
 }
 
-void test_insert_in_middle_line(void) {
+void test_insert_in_middle_line(void)
+{
     line *line;
     code_table = create_code_table();
 
@@ -72,7 +78,8 @@ void test_insert_in_middle_line(void) {
     CU_ASSERT_NOT_EQUAL(line, NULL);
 }
 
-void test_insert_in_first_line(void) {
+void test_insert_in_first_line(void)
+{
     line *line;
     code_table = create_code_table();
 
@@ -85,7 +92,8 @@ void test_insert_in_first_line(void) {
     CU_ASSERT_NOT_EQUAL(line, NULL);
 }
 
-void test_find_symbol(void) {
+void test_find_symbol(void)
+{
     code_table = create_code_table();
 
     insert_line(code_table, "test", 1);
@@ -101,6 +109,53 @@ void test_find_symbol(void) {
     CU_ASSERT_STRING_EQUAL(element_2->content, "test2");
     CU_ASSERT_STRING_EQUAL(element_3->content, "test3");
     CU_ASSERT_EQUAL(element_4, NULL);
+}
+
+void test_write_code(void)
+{
+    code_table = create_code_table();
+
+    insert_line(code_table, "test0", 1);
+    insert_line(code_table, "test1", 2);
+    insert_line(code_table, "test2", 3);
+
+    CU_ASSERT_EQUAL(write_code_table(code_table),1);
+}
+
+void test_write_code_without_table(void)
+{
+  insert_line(code_table, "test0", 1);
+  insert_line(code_table, "test1", 2);
+  insert_line(code_table, "test2", 3);
+
+  CU_ASSERT_EQUAL(write_code_table(code_table),1);
+}
+
+void test_write_code_table_sequential(void)
+{
+    code_table = create_code_table();
+    int status=0;
+    char line_content[200];
+    // Refactor, we need work in the best way to implement this.
+
+    insert_line(code_table, "test0", 1);
+    insert_line(code_table, "test1", 2);
+    insert_line(code_table, "test2", 3);
+
+    write_code_table(code_table);
+
+    FILE *file = fopen("output/safe_code.c","r+");
+
+    while (fgets (line_content, 200, file) != NULL) {
+        if(strcmp(line_content,"test0\n") == 0 ||
+           strcmp(line_content,"test1\n") == 0 ||
+           strcmp(line_content,"test2\n") == 0 )
+            status++;
+    }
+
+    CU_ASSERT_EQUAL(status,3);
+
+    fclose(file);
 }
 
 /************* Test Runner Code goes here **************/
@@ -126,7 +181,10 @@ int main ( void )
         (NULL == CU_add_test(pSuite, "Insert sequential line in code table", test_insert_sequential_line)) ||
         (NULL == CU_add_test(pSuite, "Insert line in middle of code table", test_insert_in_middle_line)) ||
         (NULL == CU_add_test(pSuite, "Insert line in begin of code table", test_insert_in_first_line)) ||
-        (NULL == CU_add_test(pSuite, "Find line in code table", test_find_symbol))
+        (NULL == CU_add_test(pSuite, "Find line in code table", test_find_symbol)) ||
+        (NULL == CU_add_test(pSuite, "write code", test_write_code)) ||
+        (NULL == CU_add_test(pSuite, "write code without code table", test_write_code_without_table)) ||
+        (NULL == CU_add_test(pSuite, "write code table in file", test_write_code_table_sequential))
       )
    {
       CU_cleanup_registry();
