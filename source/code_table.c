@@ -108,7 +108,8 @@ line *find_line(line *head_code_table, int number)
 
 int write_code_table(line *head_code_table){
 
-    FILE *file = fopen("safe_code.c","w+");;
+    mkdir("output/", 0700);
+    FILE *file = fopen("output/safe_code.c","w+");;
 
     if(code_table_is_empty(head_code_table))
         return 0;
