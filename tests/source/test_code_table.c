@@ -105,6 +105,23 @@ void test_find_symbol(void) {
     CU_ASSERT_EQUAL(element_4, NULL);
 }
 
+void test_write_code(void) {
+    code_table = create_code_table();
+
+    insert_line(code_table, "test0", 1);
+    insert_line(code_table, "test1", 2);
+    insert_line(code_table, "test2", 3);
+
+    CU_ASSERT_EQUAL(write_code_table(code_table),1);
+}
+
+void test_write_code_without_table(void){
+  insert_line(code_table, "test0", 1);
+  insert_line(code_table, "test1", 2);
+  insert_line(code_table, "test2", 3);
+
+  CU_ASSERT_EQUAL(write_code_table(code_table),1);
+}
 
 void test_write_code_table_sequential(void) {
     code_table = create_code_table();
@@ -156,7 +173,9 @@ int main ( void )
         (NULL == CU_add_test(pSuite, "Insert line in middle of code table", test_insert_in_middle_line)) ||
         (NULL == CU_add_test(pSuite, "Insert line in begin of code table", test_insert_in_first_line)) ||
         (NULL == CU_add_test(pSuite, "Find line in code table", test_find_symbol)) ||
-        (NULL == CU_add_test(pSuite, "write code table", test_write_code_table_sequential))
+        (NULL == CU_add_test(pSuite, "write code", test_write_code)) ||
+        (NULL == CU_add_test(pSuite, "write code without code table", test_write_code_without_table)) ||
+        (NULL == CU_add_test(pSuite, "write code table in file", test_write_code_table_sequential))
       )
    {
       CU_cleanup_registry();
