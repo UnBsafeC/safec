@@ -51,6 +51,7 @@ void insert_line(line *head_code_table, char *content, int number)
 
     if(!prev_line)
     {
+
         line *temp_line = head_code_table->next;
 
         head_code_table->next = new_line;
@@ -61,7 +62,7 @@ void insert_line(line *head_code_table, char *content, int number)
 
         return;
     }
-    
+
     if(!next_line)
     {
         prev_line->next = new_line;
@@ -105,3 +106,23 @@ line *find_line(line *head_code_table, int number)
         return NULL;
 }
 
+int write_code_table(line *head_code_table){
+
+    FILE *file = fopen("safe_code.c","w+");;
+
+    if(code_table_is_empty(head_code_table))
+        return 0;
+
+    line *iterator = (line *) malloc(sizeof(line));
+    iterator = head_code_table->next;
+    fprintf(file, "//Safe-C Output\n//Now you code is Safe!\n");
+
+    while (iterator != NULL) {
+
+        fprintf(file, "\n%s",iterator->content);
+        iterator = iterator->next;
+    }
+    fprintf(file, "\n//End of file");
+    fclose(file);
+    return 1;
+}

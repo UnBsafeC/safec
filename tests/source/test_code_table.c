@@ -103,6 +103,17 @@ void test_find_symbol(void) {
     CU_ASSERT_EQUAL(element_4, NULL);
 }
 
+
+void test_write_code_table_sequential(void) {
+    line *line, *line2, *line3;
+    code_table = create_code_table();
+
+    insert_line(code_table, "test", 1);
+    insert_line(code_table, "test2", 2);
+    insert_line(code_table, "test3", 3);
+
+    CU_ASSERT_EQUAL(write_code_table(code_table), 1);
+}
 /************* Test Runner Code goes here **************/
 
 int main ( void )
@@ -126,7 +137,8 @@ int main ( void )
         (NULL == CU_add_test(pSuite, "Insert sequential line in code table", test_insert_sequential_line)) ||
         (NULL == CU_add_test(pSuite, "Insert line in middle of code table", test_insert_in_middle_line)) ||
         (NULL == CU_add_test(pSuite, "Insert line in begin of code table", test_insert_in_first_line)) ||
-        (NULL == CU_add_test(pSuite, "Find line in code table", test_find_symbol))
+        (NULL == CU_add_test(pSuite, "Find line in code table", test_find_symbol)) ||
+        (NULL == CU_add_test(pSuite, "write code table", test_write_code_table_sequential))
       )
    {
       CU_cleanup_registry();
