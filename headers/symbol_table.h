@@ -34,4 +34,9 @@ node *find_by_scope(node *node, char symbol[40], char scope[40]);
 
 void destroy_list(node *node);
 
+int delete_node(node *list, char symbol[40]);
+
+node * update_node(node *list, node *node);
+
+int print_list(node *list); 
 #endif

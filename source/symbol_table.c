@@ -101,3 +101,49 @@ void destroy_list(node *node){
     }
     puts("\nDestruindo lista!");
 }
+
+int delete_node(node *list, char symbol[40]){
+    node_iterator = list->next;
+    if(symbol == node_iterator->symbol){
+        list->next = node_iterator->next;
+        free(node_iterator->next);
+        return 1;
+    }
+ 
+    while(node_iterator->next != NULL){
+        if(symbol == node_iterator->next->symbol){
+            if(node_iterator->next->next == NULL){
+                node_iterator->next = NULL;
+                free(node_iterator->next);
+                return 2;
+            } 
+            else{
+                node_iterator->next = node_iterator->next->next;
+                free(node_iterator->next);
+                return 3;
+            }
+        }
+        node_iterator = node_iterator->next;
+    }
+    return 0;
+}
+
+node * update_node(node *list, node *node){
+    return 0;
+}
+
+int print_list(node *node){
+
+    if(is_empty(node) ){
+        return 0;
+    }
+  
+    node_iterator = node->next;
+    
+    while(node_iterator != NULL){
+        printf("\nSymbol: %s Scope: %s Value: %d\n", node_iterator->symbol, node_iterator->scope, node_iterator->value); 
+        node_iterator = node_iterator->next;
+    }
+    return 1;
+}
+
