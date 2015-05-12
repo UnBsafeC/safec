@@ -106,10 +106,11 @@ line *find_line(line *head_code_table, int number)
         return NULL;
 }
 
-int write_code_table(line *head_code_table){
+int write_code_table(line *head_code_table)
+{
 
     mkdir("output/", 0700);
-    FILE *file = fopen("output/safe_code.c","w+");;
+    FILE *file = fopen("output/safe_code.c","w+");
 
     if(code_table_is_empty(head_code_table))
         return 0;
@@ -118,11 +119,13 @@ int write_code_table(line *head_code_table){
     iterator = head_code_table->next;
     fprintf(file, "//Safe-C Output\n//Now you code is Safe!\n");
 
-    while (iterator != NULL) {
+    while (iterator != NULL)
+    {
 
         fprintf(file, "\n%s",iterator->content);
         iterator = iterator->next;
     }
+
     fprintf(file, "\n//End of file");
     fclose(file);
     return 1;

@@ -26,7 +26,8 @@ void test_case_sample(void)
     CU_ASSERT_STRING_EQUAL("string #1", "string #2");
 }
 
-void test_create_code_table(void) {
+void test_create_code_table(void)
+{
     code_table = create_code_table();
 
     CU_ASSERT_NOT_EQUAL(code_table, NULL);
@@ -34,14 +35,16 @@ void test_create_code_table(void) {
     CU_ASSERT_EQUAL(code_table->prev, NULL);
 }
 
-void test_code_table_is_empty(void) {
+void test_code_table_is_empty(void)
+{
     code_table = create_code_table();
 
     CU_ASSERT_EQUAL(code_table_is_empty(code_table), 1);
     CU_ASSERT_NOT_EQUAL(code_table_is_empty(code_table), 0);
 }
 
-void test_insert_sequential_line(void) {
+void test_insert_sequential_line(void)
+{
     line *line, *line2, *line3;
     code_table = create_code_table();
 
@@ -61,7 +64,8 @@ void test_insert_sequential_line(void) {
     CU_ASSERT_NOT_EQUAL(line3, NULL);
 }
 
-void test_insert_in_middle_line(void) {
+void test_insert_in_middle_line(void)
+{
     line *line;
     code_table = create_code_table();
 
@@ -74,7 +78,8 @@ void test_insert_in_middle_line(void) {
     CU_ASSERT_NOT_EQUAL(line, NULL);
 }
 
-void test_insert_in_first_line(void) {
+void test_insert_in_first_line(void)
+{
     line *line;
     code_table = create_code_table();
 
@@ -87,7 +92,8 @@ void test_insert_in_first_line(void) {
     CU_ASSERT_NOT_EQUAL(line, NULL);
 }
 
-void test_find_symbol(void) {
+void test_find_symbol(void)
+{
     code_table = create_code_table();
 
     insert_line(code_table, "test", 1);
@@ -105,7 +111,8 @@ void test_find_symbol(void) {
     CU_ASSERT_EQUAL(element_4, NULL);
 }
 
-void test_write_code(void) {
+void test_write_code(void)
+{
     code_table = create_code_table();
 
     insert_line(code_table, "test0", 1);
@@ -115,7 +122,8 @@ void test_write_code(void) {
     CU_ASSERT_EQUAL(write_code_table(code_table),1);
 }
 
-void test_write_code_without_table(void){
+void test_write_code_without_table(void)
+{
   insert_line(code_table, "test0", 1);
   insert_line(code_table, "test1", 2);
   insert_line(code_table, "test2", 3);
@@ -123,7 +131,8 @@ void test_write_code_without_table(void){
   CU_ASSERT_EQUAL(write_code_table(code_table),1);
 }
 
-void test_write_code_table_sequential(void) {
+void test_write_code_table_sequential(void)
+{
     code_table = create_code_table();
     int status=0;
     char line_content[200];
