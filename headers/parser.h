@@ -11,4 +11,4 @@ void check_uninitialized_vars(node *list, int atribution, char *symbol, int symb
 
 void set_scope(char *symbol);
 
-void check_scope_vulnerability(node *list, char *scope, char *symbol);
+int check_scope_vulnerability(node *list, char *scope, char *symbol);

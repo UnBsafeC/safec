@@ -8,6 +8,8 @@
 extern int line_number;
 extern FILE *yyin;
 extern node * list;
+char * local_scope = "nil";
+
 int division_by_zero = 0;
 
 void check_division_by_zero(int num)
@@ -62,10 +64,13 @@ Syntax
 
 Line
     :END
-    | Expression {
+    | Expression
+                {
                     check_division_by_zero(division_by_zero);
                  }
-    | Declaration
+    | INT Atribution ';'
+    | Atribution ';'
+    | Declaration '{'
 
 Expression
    : NUMBER                                  { $$=$1; }
@@ -89,30 +94,30 @@ Expression
    ;
 
 Declaration
-    :  INT Atribution
-    |  Atribution
+    : INT IDENTIFIER {  set_scope($2); } '(' Params ')'
+    ;
+
+Params
+    : IDENTIFIER    { check_scope_vulnerability(list, local_scope, $1); }
+    | IDENTIFIER ',' Params { check_scope_vulnerability(list, local_scope, $1); }
+
+    |
     ;
 
 Atribution
-    : ';'
-    | IDENTIFIER
+    : IDENTIFIER
         {
             int atribution = 0;
             check_uninitialized_vars(list, atribution, $1, 0);
         }
-    | IDENTIFIER '=' Expression
+    |  IDENTIFIER '=' Expression
         {
             int atribution = 1;
             check_uninitialized_vars(list, atribution, $1, $3);
         }
-    | Method
+    | IDENTIFIER { local_scope = $1; }  '(' Params ')'
     ;
 
-Method
-    : IDENTIFIER '(' IDENTIFIER ')' '{' { set_scope($1); }
-    | IDENTIFIER '(' IDENTIFIER ')' ';' { check_scope_vulnerability(list,$1, $3); }
-    | IDENTIFIER '(' ')' '{' { set_scope($1); }
-    ;
 %%
 
 int yyerror(char *message)
