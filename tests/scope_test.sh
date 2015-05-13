@@ -27,4 +27,25 @@ test_initialize_var_inside_scope()
   expected=""
   assertEquals  "$expected"   "$out"
 }
+
+
+
+test_pass_several_vars_to_scope()
+{
+  out="$(echo  $several_vars_to_scope | ./safec)"
+  expected="Variavel n, no escopo da funcao: sum, nao foi inicializada
+Variavel p, no escopo da funcao: sub, nao foi inicializada
+Variavel y, no escopo da funcao: sub, nao foi inicializada
+Variavel z, no escopo da funcao: sub, nao foi inicializada"
+  assertEquals  "$expected"   "$out"
+}
+
+
+test_pass_some_initialized_vars()
+{
+  out="$(echo  $some_initilized_vars | ./safec)"
+  expected="Variavel z, no escopo da funcao: sub, nao foi inicializada
+Variavel n, no escopo da funcao: sub, nao foi inicializada"
+  assertEquals  "$expected"   "$out"
+}
 load_shunit2
