@@ -174,6 +174,28 @@ void test_delete_final_node(){
   CU_ASSERT_EQUAL(delete_node(list, "test_symbol"), 2);
 }
 
+void test_update_node(){
+  list = create_list_with_three_nodes();
+  node *var = update_node(list,"test_symbol",1);
+
+  CU_ASSERT_NOT_EQUAL(var, NULL);
+  CU_ASSERT_EQUAL(var->value, 1);
+}
+
+void test_try_to_update_inexistent_node(){
+  list = create_list_with_three_nodes();
+  node *var = update_node(list,"x",1);
+
+  CU_ASSERT_EQUAL(var, NULL);
+}
+
+void test_update_node_with_null_list(){
+  list = NULL;
+  node *var = update_node(list,"x",1);
+
+  CU_ASSERT_EQUAL(var, NULL);
+}
+
 /************* Test Runner Code goes here **************/
 
 int main ( void )
@@ -201,7 +223,10 @@ int main ( void )
         (NULL == CU_add_test(pSuite, "Print Empty List", test_print_list_empty)) ||
         (NULL == CU_add_test(pSuite, "Delete First Node", test_delete_first_node)) ||
         (NULL == CU_add_test(pSuite, "Delete Middle Node", test_delete_middle_node)) ||
-        (NULL == CU_add_test(pSuite, "Delete Final Node", test_delete_final_node))
+        (NULL == CU_add_test(pSuite, "Delete Final Node", test_delete_final_node)) ||
+        (NULL == CU_add_test(pSuite, "Update Node", test_update_node)) ||
+        (NULL == CU_add_test(pSuite, "Update Inexistent Node", test_try_to_update_inexistent_node)) ||
+        (NULL == CU_add_test(pSuite, "Update Node with null list", test_update_node_with_null_list))
       )
    {
       CU_cleanup_registry();

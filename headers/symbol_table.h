@@ -36,7 +36,7 @@ void destroy_list(node *node);
 
 int delete_node(node *list, char symbol[40]);
 
-node * update_node(node *list, node *node);
+node * update_node(node *list, char symbol[40], int value);
 
 int print_list(node *list); 
 #endif

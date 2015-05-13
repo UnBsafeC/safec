@@ -128,8 +128,20 @@ int delete_node(node *list, char symbol[40]){
     return 0;
 }
 
-node * update_node(node *list, node *node){
-    return 0;
+node * update_node(node *list, char symbol[40], int value){
+    if(!list)
+        return NULL;
+
+    node *var = find_symbol(list,symbol);
+
+    if(!var)
+        return NULL;
+    else
+        delete_node(list, symbol);
+
+    var->value = value;
+    insert_symbol(list,var);
+    return var;
 }
 
 int print_list(node *node){
