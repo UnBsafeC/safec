@@ -14,12 +14,20 @@ int division_by_zero = 0;
 
 void check_division_by_zero(int num)
     {
-        if (num == 1){
+        if (num == 1)
+        {
             printf("Divisão por zero encontrada!!\n");
             division_by_zero = 0;
         }
     }
 
+void check_implicite_division_by_zero(node *list, char * variable)
+    {
+            node * identifier = find_by_scope(list, list->next->scope, variable);
+            if (identifier->inicialized)
+                if(identifier->value == 0)
+                puts("Divisão por zero encontrada!!");
+    }
 
 %}
 
@@ -65,9 +73,9 @@ Syntax
 Line
     :END
     | Expression
-                {
-                    check_division_by_zero(division_by_zero);
-                 }
+        {
+            check_division_by_zero(division_by_zero);
+        }
     | INT Atribution ';'
     | Atribution ';'
     | Declaration '{'
@@ -76,9 +84,7 @@ Expression
    : NUMBER                                  { $$=$1; }
    | IDENTIFIER
         {
-            node * identifier = find_by_scope(list, list->next->scope, $1);
-            if (!identifier->inicialized)
-            $$ = identifier->value;
+            check_implicite_division_by_zero(list, $1);
 
         }
    | SQRT '(' Expression ')'                 { $$=sqrt($3); }

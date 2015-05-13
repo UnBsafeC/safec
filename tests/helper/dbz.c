@@ -9,9 +9,7 @@ int sub(y){
     y;
 }
 int main(){
-    int n;
-    sum(n);
-    int y;
-    sub(y);
+    int n = 0;
+    int b = 2/n;
 }
 

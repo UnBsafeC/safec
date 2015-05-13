@@ -17,4 +17,15 @@ test_more_complex_expression_with_dbz() {
   assertEquals "$out" "Divisão por zero encontrada!!"
 }
 
+test_declare_variable_with_zero() {
+  out="$(echo $declare_variable_with_zero | ./safec)"
+  assertEquals "$out" "Divisão por zero encontrada!!"
+}
+
+
+test_declare_division_by_zero_as_expression() {
+  out="$(echo $declare_division_by_zero_as_expression | ./safec)"
+  assertEquals "$out" "Divisão por zero encontrada!!"
+}
+
 load_shunit2
