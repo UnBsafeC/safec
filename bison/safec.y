@@ -74,6 +74,13 @@ Line
 
 Expression
    : NUMBER                                  { $$=$1; }
+   | IDENTIFIER
+        {
+            node * identifier = find_by_scope(list, list->next->scope, $1);
+            if (!identifier->inicialized)
+            $$ = identifier->value;
+
+        }
    | SQRT '(' Expression ')'                 { $$=sqrt($3); }
    | POW '(' Expression ',' Expression ')'   { $$=pow($3,$5); }
    | Expression '+' Expression               { $$=$1+$3; }
@@ -94,7 +101,7 @@ Expression
    ;
 
 Declaration
-    : INT IDENTIFIER {  set_scope($2); } '(' Params ')'
+    : INT IDENTIFIER '(' {  set_scope($2); }  Params ')'
     ;
 
 Params
@@ -115,7 +122,7 @@ Atribution
             int atribution = 1;
             check_uninitialized_vars(list, atribution, $1, $3);
         }
-    | IDENTIFIER { local_scope = $1; }  '(' Params ')'
+    | IDENTIFIER '(' { local_scope = $1; }  Params ')'
     ;
 
 %%
