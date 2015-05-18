@@ -30,26 +30,6 @@ void add_symbol_to_table (node *list, char * symbol,int flag_atribution,int valu
      }                                     
 }    
 
-//void add_symbol_to_table (node *list, char * symbol,int flag_atribution,int value){
-//    if(var)
-//        return;
-//    node *new_node = (node *) malloc(sizeof(node));
-//    new_node->symbol = symbol;
-//    new_node->inicialized = 0;
-//    new_node->value = 0;
-//
-//    new_node->scope = list->next->scope;
-//
-//    if (flag_atribution){
-//        new_node->inicialized = 1;
-//        new_node->value=value;
-//        new_node->symbol = symbol;
-//    }
-//
-//    insert_symbol(list, new_node);
-//}
-
-
 int check_vulnerability(node * list, char symbol[40],int flag_atribution)
 {
 
