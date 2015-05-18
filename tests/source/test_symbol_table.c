@@ -4,6 +4,7 @@
 //#include "CUnit/Console.h"
 
 #include "symbol_table.c"
+#include "parser.c"
 
 #include <stdio.h>  // for printf
 
@@ -196,6 +197,31 @@ void test_update_node_with_null_list(){
   CU_ASSERT_EQUAL(var, NULL);
 }
 
+void test_add_symbol_to_table(){
+  list = create_list_with_three_nodes();
+  node *temp = list;
+  int count = 0;
+  add_symbol_to_table(list, "test_symbol4", 0, 1);
+  while(temp->next != NULL){
+    if(temp->symbol == "test_symbol4")
+      count = 1;
+    temp = temp->next;
+  }
+  CU_ASSERT_EQUAL(count, 1);  
+} 
+
+void test_add_symbol_to_table_existent_node(){
+  list = create_list_with_three_nodes();
+  int count = 0;
+  node *temp = list;
+  add_symbol_to_table(list, "test_symbol", 0, 1);
+  while(temp->next != NULL){
+    if(temp->symbol == "test_symbol")
+      count++; 
+    temp = temp->next;
+  }
+  CU_ASSERT_EQUAL(count, 1);  
+}
 /************* Test Runner Code goes here **************/
 
 int main ( void )
@@ -214,8 +240,8 @@ int main ( void )
    }
 
    /* add the tests to the suite */
-   if ( (NULL == CU_add_test(pSuite, "Create list", test_create_list)) ||
-        (NULL == CU_add_test(pSuite, "List is empty", test_list_is_empty)) ||
+   if ( (NULL == CU_add_test(pSuite, "Create List", test_create_list)) ||
+        (NULL == CU_add_test(pSuite, "List Is Empty", test_list_is_empty)) ||
         (NULL == CU_add_test(pSuite, "Insert Symbol", test_insert_symbol)) ||
         (NULL == CU_add_test(pSuite, "Destroy List", test_destroy_list)) ||
         (NULL == CU_add_test(pSuite, "Find Symbols", test_find_symbol)) ||
@@ -226,7 +252,9 @@ int main ( void )
         (NULL == CU_add_test(pSuite, "Delete Final Node", test_delete_final_node)) ||
         (NULL == CU_add_test(pSuite, "Update Node", test_update_node)) ||
         (NULL == CU_add_test(pSuite, "Update Inexistent Node", test_try_to_update_inexistent_node)) ||
-        (NULL == CU_add_test(pSuite, "Update Node with null list", test_update_node_with_null_list))
+        (NULL == CU_add_test(pSuite, "Update Node With Null List", test_update_node_with_null_list)) ||
+        (NULL == CU_add_test(pSuite, "Add Symbol To Table", test_add_symbol_to_table)) ||
+        (NULL == CU_add_test(pSuite, "Add Symbol To Table Existent Node", test_add_symbol_to_table_existent_node))
       )
    {
       CU_cleanup_registry();
