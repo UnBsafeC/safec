@@ -21,13 +21,6 @@ void check_division_by_zero(int num)
         }
     }
 
-void check_implicite_division_by_zero(node *list, char * variable)
-    {
-            node * identifier = find_by_scope(list, list->next->scope, variable);
-            if (identifier->inicialized)
-                if(identifier->value == 0)
-                puts("Divisão por zero encontrada!!");
-    }
 
 %}
 
@@ -138,9 +131,8 @@ int yyerror(char *message)
    printf("Message error: %s (line: %d)\n", message, line_number);
 }
 
-int main(int argc, char *argv[])
+void set_yyin(int argc, char *argv[])
 {
-
     if(argc == 2)
     {
         FILE *input = fopen(argv[1],"r");
@@ -153,11 +145,18 @@ int main(int argc, char *argv[])
    }
     else
         yyin = stdin;
+}
 
+
+int main(int argc, char *argv[])
+{
+
+
+    set_yyin(argc, argv);
     list = create_list();
     while (!feof(yyin))
     {
-        return yyparse();
+        yyparse();
     }
 
     return 0;
