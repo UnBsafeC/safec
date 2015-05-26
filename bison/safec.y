@@ -138,12 +138,38 @@ int yyerror(char *message)
    printf("Message error: %s (line: %d)\n", message, line_number);
 }
 
+
+void copy_to_final_file(FILE * in_file)
+{
+    FILE *final_file;
+    FILE *source;
+    char ch;
+
+    final_file = fopen( "output/safec.c" , "w");
+
+    while(1)
+    {
+        ch = fgetc(in_file);
+        if(ch == EOF)
+        {
+            fclose(in_file);
+            break;
+        }
+        else
+            fputc(ch, final_file);
+    }
+
+    fclose(final_file);
+}
+
 int main(int argc, char *argv[])
 {
 
     if(argc == 2)
     {
         FILE *input = fopen(argv[1],"r");
+        FILE * copy_input = fopen(argv[1],"r");
+        copy_to_final_file(copy_input);
         yyin = input;
         if(input == 0)
         {
