@@ -8,6 +8,7 @@
 extern int line_number;
 extern FILE *yyin;
 extern node * list;
+extern line * code_table;
 char * local_scope = "nil";
 
 int division_by_zero = 0;
@@ -121,12 +122,12 @@ Atribution
     : IDENTIFIER
         {
             int atribution = 0;
-            check_uninitialized_vars(list, atribution, $1, 0);
+            check_uninitialized_vars(code_table, list,  atribution, $1, 0);
         }
     |  IDENTIFIER '=' Expression
         {
             int atribution = 1;
-            check_uninitialized_vars(list, atribution, $1, $3);
+            check_uninitialized_vars(code_table, list, atribution, $1, $3);
         }
     | IDENTIFIER '(' { local_scope = $1; }  Params ')'
     ;
@@ -181,10 +182,14 @@ int main(int argc, char *argv[])
         yyin = stdin;
 
     list = create_list();
+    code_table = create_code_table();
+    fill_code_table(code_table);
     while (!feof(yyin))
     {
-        return yyparse();
+        yyparse();
     }
+
+    write_code_table(code_table);
 
     return 0;
 }

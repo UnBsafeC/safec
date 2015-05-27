@@ -7,7 +7,7 @@ void add_symbol_to_table(node *list, char *symbol, int flag_atribution, int valu
 
 int check_vulnerability(node *list, char *symbol, int flag_atribution);
 
-void check_uninitialized_vars(node *list, int atribution, char *symbol, int symbol_value);
+void check_uninitialized_vars(line *code_table, node *list, int atribution, char *symbol, int symbol_value);
 
 void set_scope(char *symbol);
 

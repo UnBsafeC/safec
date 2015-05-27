@@ -106,18 +106,41 @@ line *find_line(line *head_code_table, int number)
         return NULL;
 }
 
+
+void fill_code_table(line *code_table)
+{
+    FILE *final_file;
+    char  line_content[200];
+    char ch;
+
+    final_file = fopen("output/safec.c ", "r");
+
+
+    int status = 0;
+    while (fgets (line_content, 200, final_file) != NULL)
+    {
+            printf("%s",line_content);
+            insert_line(code_table, line_content, status);
+            status++;
+    }
+}
+
 int write_code_table(line *head_code_table)
 {
 
+    //printf("%s", head_code_table->content);
+
     mkdir("output/", 0700);
-    FILE *file = fopen("output/safe_code.c","w+");
+    FILE *file = fopen("output/safec.c","r+");
 
     if(code_table_is_empty(head_code_table))
+    {
         return 0;
+    }
 
     line *iterator = (line *) malloc(sizeof(line));
     iterator = head_code_table->next;
-    fprintf(file, "//Safe-C Output\n//Now you code is Safe!\n");
+    //fprintf(file, "//Safe-C Output\n//Now you code is Safe!\n");
 
     while (iterator != NULL)
     {
@@ -126,7 +149,7 @@ int write_code_table(line *head_code_table)
         iterator = iterator->next;
     }
 
-    fprintf(file, "\n//End of file");
+    //fprintf(file, "\n//End of file");
     fclose(file);
     return 1;
 }

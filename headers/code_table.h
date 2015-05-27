@@ -20,5 +20,6 @@ int code_table_is_empty(line *head_code_table );
 void insert_line(line *head_code_table, char *content, int number);
 line *find_line(line *head_code_table, int number);
 int write_code_table(line *head_code_table);
+void fill_code_table(line *code_table);
 
 #endif
