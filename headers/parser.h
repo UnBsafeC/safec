@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+int step_compile;
+
 void add_symbol_to_table(node *list, char *symbol, int flag_atribution, int value);
 
 int check_vulnerability(node *list, char *symbol, int flag_atribution);

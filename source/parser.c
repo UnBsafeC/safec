@@ -92,7 +92,5 @@ int check_scope_vulnerability(node *list, char *method,
             char msg[200];
             snprintf(msg,200,  "/*variavel %s, no escopo da funcao: %s, nao foi inicializada*/", symbol,method);
             insert_line(code_table, msg, line_number);
-            printf("variavel %s, no escopo da funcao: %s, nao foi inicializada\n",symbol,method);
         }
-
 }

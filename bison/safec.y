@@ -9,17 +9,18 @@ extern int line_number;
 extern FILE *yyin;
 extern node * list;
 extern line * code_table;
+extern int step_compile;
+
 char * local_scope = "nil";
 
 int division_by_zero = 0;
 
-void check_division_by_zero(int num)
+void check_division_by_zero()
     {
-        if (num == 1)
-        {
-            printf("Divisao por zero encontrada!!\n");
-            division_by_zero = 0;
-        }
+
+            char msg[200];
+            snprintf(msg,200,  "/*Divisao por zero encontrada!!*/");
+            insert_line(code_table, msg, line_number);
     }
 
 void check_implicite_division_by_zero(node *list, char * variable)
@@ -72,43 +73,80 @@ Stream
     | Syntax
 
 Syntax
-    :INCLUDES
+    : INCLUDES
     ;
 
 Line
-    :END
-    | Expression
+    : END
+    | Expression ';'
         {
-            check_division_by_zero(division_by_zero);
+            if(step_compile == 2)
+                check_division_by_zero(division_by_zero);
         }
     | INT Atribution ';'
     | Atribution ';'
     | Declaration '{'
 
 Expression
-   : NUMBER                                  { $$=$1; }
+   : NUMBER
+        {
+            if (step_compile == 2)
+                $$=$1;
+        }
    | IDENTIFIER
         {
+        if (step_compile == 1)
+            add_symbol_to_table(list, $1, 0, 0);
+        else
             check_implicite_division_by_zero(list, $1);
-
         }
-   | SQRT '(' Expression ')'                 { $$=sqrt($3); }
-   | POW '(' Expression ',' Expression ')'   { $$=pow($3,$5); }
-   | Expression '+' Expression               { $$=$1+$3; }
-   | Expression '-' Expression               { $$=$1-$3; }
-   | Expression '*' Expression               { $$=$1*$3; }
+   | SQRT '(' Expression ')'
+        {
+            if(step_compile == 2)
+                $$=sqrt($3);
+        }
+   | POW '(' Expression ',' Expression ')'
+        {
+            if(step_compile == 2)
+                $$=pow($3,$5);
+        }
+   | Expression '+' Expression
+        {
+            if(step_compile == 2)
+                $$=$1+$3;
+        }
+   | Expression '-' Expression
+        {
+            if(step_compile == 2)
+                $$=$1-$3;
+        }
+   | Expression '*' Expression
+        {
+            if(step_compile == 2)
+                $$=$1*$3;
+        }
    | Expression '/' Expression
         {
-            if($3 == 0.0)
+            if(step_compile == 2)
             {
-                division_by_zero = 1;
-                $$ = 0;
+                if($3 == 0.0)
+                {
+                    check_division_by_zero();
+                }
+                else
+                    $$ = $1/$3;
             }
-            else
-                $$ = $1/$3;
         }
-   | '-' Expression %prec '-'                { $$=-$2; }
-   | '(' Expression ')'                      { $$=$2; }
+   | '-' Expression %prec '-'
+        {
+            if(step_compile == 2)
+                $$=-$2;
+        }
+   | '(' Expression ')'
+        {
+            if(step_compile == 2)
+                $$=$2;
+        }
    ;
 
 Declaration
@@ -116,26 +154,41 @@ Declaration
     ;
 
 Params
-    : IDENTIFIER    { check_scope_vulnerability(list, local_scope, $1, line_number); }
-    | IDENTIFIER ',' Params {
-                                check_scope_vulnerability(list, local_scope,
-                                                          $1, line_number );
-                            }
-
+    : IDENTIFIER
+        {
+            if (step_compile == 1)
+                check_scope_vulnerability(list, local_scope,
+                                            $1, line_number);
+        }
+    | IDENTIFIER ',' Params
+        {
+            if (step_compile == 1)
+                check_scope_vulnerability(list, local_scope,
+                                            $1, line_number );
+        }
     |
     ;
 
 Atribution
     : IDENTIFIER
         {
-            int atribution = 0;
-            check_uninitialized_vars(code_table, list,  atribution,
-                                     $1, 0,line_number);
+
+            if (step_compile == 1)
+            {
+                int atribution = 0;
+                check_uninitialized_vars(code_table, list,  atribution,
+                                        $1, 0,line_number);
+            }
         }
-    |  IDENTIFIER '=' Expression
+    | IDENTIFIER '=' Expression
         {
-            int atribution = 1;
-            check_uninitialized_vars(code_table, list, atribution, $1, $3, line_number);
+            if (step_compile == 1)
+            {
+                int atribution = 1;
+                check_uninitialized_vars(code_table, list,
+                                         atribution, $1,
+                                         $3, line_number);
+            }
         }
     | IDENTIFIER '(' { local_scope = $1; }  Params ')'
     ;
@@ -174,6 +227,8 @@ void copy_to_final_file(FILE * in_file)
 int main(int argc, char *argv[])
 {
 
+    step_compile = 1;
+
     if(argc == 2)
     {
         FILE *input = fopen(argv[1],"r");
@@ -192,10 +247,23 @@ int main(int argc, char *argv[])
     list = create_list();
     code_table = create_code_table();
     fill_code_table(code_table);
+
     while (!feof(yyin))
     {
         yyparse();
     }
+
+    FILE * re_input = fopen("output/safec.c","r");
+    yyin = re_input;
+    step_compile = 2;
+    line_number = 0;
+
+    while (!feof(yyin))
+    {
+        yyparse();
+    }
+
+    puts("Genrating output file, check output/safec.c");
 
     write_code_table(code_table);
 
