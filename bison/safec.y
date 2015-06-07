@@ -19,20 +19,31 @@ void check_division_by_zero()
     {
 
             char msg[200];
-            snprintf(msg,200,  "/*Divisao por zero encontrada!!*/");
+            snprintf(msg,200,  "/*Divisao explicita por zero encontrada!!*/");
             insert_line(code_table, msg, line_number);
     }
 
 void check_implicite_division_by_zero(node *list, char * variable)
     {
-            node * identifier = find_by_scope(list, list->next->scope, variable);
-            if (identifier->inicialized)
-                if(identifier->value == 0)
-                {
+        node * method_identifier = find_by_scope(list, list->next->scope, variable);
+        node * main_identifier = find_by_scope(list, "main", variable);
+
+        /* checa primeiro se foi inicializado na main, depois no método em questão*/
+        if (main_identifier->inicialized && main_identifier->value == 0)
+        {
                     char msg[200];
-                    snprintf(msg,200,  "/*Divisao por zero encontrada!!*/");
+                    snprintf(msg,200,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/", variable);
                     insert_line(code_table, msg, line_number);
-                }
+        }
+
+        else if (method_identifier->inicialized && method_identifier->value == 0)
+        {
+                    char msg[200];
+                    snprintf(msg,200,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/", variable);
+                    insert_line(code_table, msg, line_number);
+        }
+
+
     }
 
 %}
@@ -79,10 +90,6 @@ Syntax
 Line
     : END
     | Expression ';'
-        {
-            if(step_compile == 2)
-                check_division_by_zero(division_by_zero);
-        }
     | INT Atribution ';'
     | Atribution ';'
     | Declaration '{'
