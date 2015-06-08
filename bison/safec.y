@@ -18,7 +18,7 @@ void check_division_by_zero()
     {
 
             char msg[100];
-            snprintf(msg, 100,"/*Divisao explicita por zero encontrada!!*/");
+            snprintf(msg, 100,"/*Divisao explicita por zero encontrada!!*/\n");
             insert_line(code_table, msg, line_number);
     }
 
@@ -31,14 +31,14 @@ void check_implicite_division_by_zero(node *list, char * variable)
         if (main_identifier->inicialized && main_identifier->value == 0)
         {
                     char msg[100];
-                    snprintf(msg,100,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/", variable);
+                    snprintf(msg,100,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/\n", variable);
                     insert_line(code_table, msg, line_number);
         }
 
         else if (method_identifier->inicialized && method_identifier->value == 0)
         {
                     char msg[100];
-                    snprintf(msg,100,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/", variable);
+                    snprintf(msg,100,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/\n", variable);
                     insert_line(code_table, msg, line_number);
         }
     }
@@ -53,7 +53,7 @@ void check_implicite_division_by_zero(node *list, char * variable)
     int inicialized;
     int value;
 }
-
+,
 
 %token '/' '*' '-' '+' POW SQRT
 %token <val> NUMBER
@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
     FILE * re_input = fopen("output/safec.c","r");
     yyin = re_input;
     step_compile = 2;
-    line_number = 0;
+    line_number = 1;
 
     while (!feof(yyin))
     {
@@ -270,7 +270,6 @@ int main(int argc, char *argv[])
 
     puts("Genrating output file, check output/safec.c");
 
-    line_number = 0;
     write_code_table(code_table);
 
     return 0;

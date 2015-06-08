@@ -65,6 +65,7 @@ void first_code_table_update(line *code_table, char line_content[40] )
 
 void insert_line(line *head, char content[40], int number)
 {
+
     line *new_line = (line *) malloc(sizeof(line));
 
     if(!new_line)
@@ -119,7 +120,7 @@ void insert_line(line *head, char content[40], int number)
 
     new_line->next = temp_line;
     temp_line->prev = new_line;
-    line_number = line_number + 2;
+    line_number++;
 }
 
 line *find_line(line *head, int number)
@@ -177,7 +178,6 @@ void fill_code_table(line * code_table)
 
     while((read = getline(&line_content, &len, final_file)) != -1 )
     {
-
        char tmp_content[40];
        strcpy(tmp_content, line_content);
        first_code_table_update(code_table, tmp_content);
@@ -202,7 +202,7 @@ int write_code_table(line *code_table)
 
     while (iterator != NULL)
     {
-        fprintf(file, "\n%s",iterator->content);
+        fprintf(file, "%s",iterator->content);
         iterator = iterator->next;
     }
 

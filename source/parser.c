@@ -59,10 +59,8 @@ void check_uninitialized_vars(line *code_table, node * list,
     if(result)
     {
         char msg[100];
-        snprintf(msg,100,  "/*Vulnerabilidade encontrada!! */");
+        snprintf(msg,100,  "/*Vulnerabilidade encontrada!! */\n");
         insert_line(code_table, msg, line_number);
-        insert_line(code_table, "Vulnerabilidade encontrada!!", 4);
-        puts("Vulnerabilidade encontrada");
     }
     else
         add_symbol_to_table(list, symbol, atribution, symbol_value);
@@ -90,7 +88,7 @@ int check_scope_vulnerability(node *list, char *method,
         if(!scope_node->inicialized)
         {
             char msg[100];
-            snprintf(msg,100,  "/*variavel %s, no escopo da funcao: %s, nao foi inicializada*/", symbol,method);
+            snprintf(msg,100,  "/*variavel %s, no escopo da funcao: %s, nao foi inicializada*/\n", symbol,method);
             insert_line(code_table, msg, line_number);
         }
 }
