@@ -21,4 +21,5 @@ test: safec
 	./run_cunit_tests_code_table
 
 clean:
+	rm -rf output
 	rm source/lexico.c source/sintatico.c headers/sintatico.h safec run_cunit_tests*
