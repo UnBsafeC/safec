@@ -6,6 +6,8 @@
 #define TRUE 1
 #define FALSE 0
 
+extern int line_number;
+
 line * head;
 
 line *create_code_table()
@@ -117,6 +119,7 @@ void insert_line(line *head, char content[40], int number)
 
     new_line->next = temp_line;
     temp_line->prev = new_line;
+    line_number = line_number + 2;
 }
 
 line *find_line(line *head, int number)
@@ -186,7 +189,6 @@ void fill_code_table(line * code_table)
 int write_code_table(line *code_table)
 {
 
-    mkdir("output/", 0700);
     FILE *file = fopen("output/safec.c","w+");
 
     if(code_table_is_empty(code_table))

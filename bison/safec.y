@@ -1,15 +1,14 @@
 %{
 #include "global.h"
-#include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
-extern int line_number;
 extern FILE *yyin;
 extern node * list;
 extern line * code_table;
 extern int step_compile;
+extern int line_number;
 
 char * local_scope = "nil";
 
@@ -18,8 +17,8 @@ int division_by_zero = 0;
 void check_division_by_zero()
     {
 
-            char msg[200];
-            snprintf(msg,200,  "/*Divisao explicita por zero encontrada!!*/");
+            char msg[100];
+            snprintf(msg, 100,"/*Divisao explicita por zero encontrada!!*/");
             insert_line(code_table, msg, line_number);
     }
 
@@ -31,19 +30,17 @@ void check_implicite_division_by_zero(node *list, char * variable)
         /* checa primeiro se foi inicializado na main, depois no método em questão*/
         if (main_identifier->inicialized && main_identifier->value == 0)
         {
-                    char msg[200];
-                    snprintf(msg,200,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/", variable);
+                    char msg[100];
+                    snprintf(msg,100,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/", variable);
                     insert_line(code_table, msg, line_number);
         }
 
         else if (method_identifier->inicialized && method_identifier->value == 0)
         {
-                    char msg[200];
-                    snprintf(msg,200,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/", variable);
+                    char msg[100];
+                    snprintf(msg,100,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/", variable);
                     insert_line(code_table, msg, line_number);
         }
-
-
     }
 
 %}
@@ -214,6 +211,7 @@ void copy_to_final_file(FILE * in_file)
     FILE *source;
     char ch;
 
+    mkdir("output/", 0700);
     final_file = fopen( "output/safec.c" , "w");
 
     while(1)
@@ -272,6 +270,7 @@ int main(int argc, char *argv[])
 
     puts("Genrating output file, check output/safec.c");
 
+    line_number = 0;
     write_code_table(code_table);
 
     return 0;
