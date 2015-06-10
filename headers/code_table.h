@@ -14,6 +14,7 @@ typedef struct Line{
 }line;
 
 line *code_table;
+int line_number;
 
 line *create_code_table();
 int code_table_is_empty(line *head_code_table );

@@ -189,6 +189,7 @@ void fill_code_table(line * code_table)
 int write_code_table(line *code_table)
 {
 
+    mkdir("output", 0700);
     FILE *file = fopen("output/safec.c","w+");
 
     if(code_table_is_empty(code_table))
