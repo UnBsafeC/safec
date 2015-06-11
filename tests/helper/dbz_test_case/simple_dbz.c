@@ -1,6 +1,6 @@
-#include <stdlib.h>\n
-#include <stdio.h>\n
+#include <stdlib.h>
+#include <stdio.h>
 
 int main(){
-1/0
+1/0;
 }
