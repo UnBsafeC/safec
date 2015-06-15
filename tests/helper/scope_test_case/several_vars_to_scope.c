@@ -1,21 +1,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int sum(n)
-{
+int sum(n){
     n;
 }
 
-int sub(n,y,z)
-{
+int sub(n,y,z){
     y;
     z;
     n=5;
     p;
 }
 
-int main()
-{
+int main(){
     int n;
     int y;
     int z;
