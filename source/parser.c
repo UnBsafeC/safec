@@ -59,7 +59,8 @@ void check_uninitialized_vars(line *code_table, node * list,
     if(result)
     {
         char msg[100];
-        snprintf(msg,100,  "/*Vulnerabilidade encontrada!! */");
+        
+        snprintf(msg,100,  "/*Variavel %s nao foi inicializada!! */\n", symbol);
         insert_line(code_table, msg, line_number);
         insert_line(code_table, "Vulnerabilidade encontrada!!", 4);
         puts("Vulnerabilidade encontrada");

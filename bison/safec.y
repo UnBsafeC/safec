@@ -54,7 +54,6 @@ void check_implicite_division_by_zero(node *list, char * variable)
     int value;
 }
 
-
 %token '/' '*' '-' '+' POW SQRT
 %token <val> NUMBER
 %token END
@@ -100,7 +99,12 @@ Expression
    | IDENTIFIER
         {
         if (step_compile == 1)
-            add_symbol_to_table(list, $1, 0, 0);
+        {
+            int atribution = 0;
+            check_uninitialized_vars(code_table, list,
+                                     atribution, $1,
+                                     0,line_number);
+        }
         else
             check_implicite_division_by_zero(list, $1);
         }
@@ -176,7 +180,6 @@ Params
 Atribution
     : IDENTIFIER
         {
-
             if (step_compile == 1)
             {
                 int atribution = 0;
