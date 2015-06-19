@@ -1,33 +1,45 @@
 %{
 #include "global.h"
-#include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
-extern int line_number;
 extern FILE *yyin;
 extern node * list;
 extern line * code_table;
+extern int step_compile;
+extern int line_number;
 char * local_scope = "nil";
 
 int division_by_zero = 0;
 
-void check_division_by_zero(int num)
+void check_division_by_zero()
     {
-        if (num == 1)
-        {
-            printf("Divisão por zero encontrada!!\n");
-            division_by_zero = 0;
-        }
+
+            char msg[100];
+            snprintf(msg, 100,"/*Divisao explicita por zero encontrada!!*/\n");
+            insert_line(code_table, msg, line_number);
     }
 
 void check_implicite_division_by_zero(node *list, char * variable)
     {
-            node * identifier = find_by_scope(list, list->next->scope, variable);
-            if (identifier->inicialized)
-                if(identifier->value == 0)
-                puts("Divisão por zero encontrada!!");
+        node * method_identifier = find_by_scope(list, list->next->scope, variable);
+        node * main_identifier = find_by_scope(list, "main", variable);
+
+        /* checa primeiro se foi inicializado na main, depois no método em questão*/
+        if (main_identifier->inicialized && main_identifier->value == 0)
+        {
+                    char msg[100];
+                    snprintf(msg,100,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/\n", variable);
+                    insert_line(code_table, msg, line_number);
+        }
+
+        else if (method_identifier->inicialized && method_identifier->value == 0)
+        {
+                    char msg[100];
+                    snprintf(msg,100,  "/*Divisao invalida: Voce inicializou a variavel %s com zero!!*/\n", variable);
+                    insert_line(code_table, msg, line_number);
+        }
     }
 
 %}
@@ -40,7 +52,6 @@ void check_implicite_division_by_zero(node *list, char * variable)
     int inicialized;
     int value;
 }
-
 
 %token '/' '*' '-' '+' POW SQRT
 %token <val> NUMBER
@@ -68,43 +79,81 @@ Stream
     | Syntax
 
 Syntax
-    :INCLUDES
+    : INCLUDES
     ;
 
 Line
-    :END
-    | Expression
-        {
-            check_division_by_zero(division_by_zero);
-        }
+    : END
+    | Expression ';'
     | INT Atribution ';'
     | Atribution ';'
     | Declaration '{'
 
 Expression
-   : NUMBER                                  { $$=$1; }
+   : NUMBER
+        {
+            if (step_compile == 2)
+                $$=$1;
+        }
    | IDENTIFIER
         {
-            check_implicite_division_by_zero(list, $1);
-
+        if (step_compile == 1)
+        {
+            int atribution = 0;
+            check_uninitialized_vars(code_table, list,
+                                     atribution, $1,
+                                     0,line_number);
         }
-   | SQRT '(' Expression ')'                 { $$=sqrt($3); }
-   | POW '(' Expression ',' Expression ')'   { $$=pow($3,$5); }
-   | Expression '+' Expression               { $$=$1+$3; }
-   | Expression '-' Expression               { $$=$1-$3; }
-   | Expression '*' Expression               { $$=$1*$3; }
+        else
+            check_implicite_division_by_zero(list, $1);
+        }
+   | SQRT '(' Expression ')'
+        {
+            if(step_compile == 2)
+                $$=sqrt($3);
+        }
+   | POW '(' Expression ',' Expression ')'
+        {
+            if(step_compile == 2)
+                $$=pow($3,$5);
+        }
+   | Expression '+' Expression
+        {
+            if(step_compile == 2)
+                $$=$1+$3;
+        }
+   | Expression '-' Expression
+        {
+            if(step_compile == 2)
+                $$=$1-$3;
+        }
+   | Expression '*' Expression
+        {
+            if(step_compile == 2)
+                $$=$1*$3;
+        }
    | Expression '/' Expression
         {
-            if($3 == 0.0)
+            if(step_compile == 2)
             {
-                division_by_zero = 1;
-                $$ = 0;
+                if($3 == 0.0)
+                {
+                    check_division_by_zero();
+                }
+                else
+                    $$ = $1/$3;
             }
-            else
-                $$ = $1/$3;
         }
-   | '-' Expression %prec '-'                { $$=-$2; }
-   | '(' Expression ')'                      { $$=$2; }
+   | '-' Expression %prec '-'
+        {
+            if(step_compile == 2)
+                $$=-$2;
+        }
+   | '(' Expression ')'
+        {
+            if(step_compile == 2)
+                $$=$2;
+        }
    ;
 
 Declaration
@@ -112,22 +161,40 @@ Declaration
     ;
 
 Params
-    : IDENTIFIER    { check_scope_vulnerability(list, local_scope, $1); }
-    | IDENTIFIER ',' Params { check_scope_vulnerability(list, local_scope, $1); }
-
+    : IDENTIFIER
+        {
+            if (step_compile == 1)
+                check_scope_vulnerability(list, local_scope,
+                                            $1, line_number);
+        }
+    | IDENTIFIER ',' Params
+        {
+            if (step_compile == 1)
+                check_scope_vulnerability(list, local_scope,
+                                            $1, line_number );
+        }
     |
     ;
 
 Atribution
     : IDENTIFIER
         {
-            int atribution = 0;
-            check_uninitialized_vars(code_table, list,  atribution, $1, 0);
+            if (step_compile == 1)
+            {
+                int atribution = 0;
+                check_uninitialized_vars(code_table, list,  atribution,
+                                        $1, 0,line_number);
+            }
         }
-    |  IDENTIFIER '=' Expression
+    | IDENTIFIER '=' Expression
         {
-            int atribution = 1;
-            check_uninitialized_vars(code_table, list, atribution, $1, $3);
+            if (step_compile == 1)
+            {
+                int atribution = 1;
+                check_uninitialized_vars(code_table, list,
+                                         atribution, $1,
+                                         $3, line_number);
+            }
         }
     | IDENTIFIER '(' { local_scope = $1; }  Params ')'
     ;
@@ -146,6 +213,7 @@ void copy_to_final_file(FILE * in_file)
     FILE *source;
     char ch;
 
+    mkdir("output/", 0700);
     final_file = fopen( "output/safec.c" , "w");
 
     while(1)
@@ -165,6 +233,8 @@ void copy_to_final_file(FILE * in_file)
 
 int main(int argc, char *argv[])
 {
+
+    step_compile = 1;
 
     if(argc == 2)
     {
@@ -188,6 +258,18 @@ int main(int argc, char *argv[])
     {
         yyparse();
     }
+
+    FILE * re_input = fopen("output/safec.c","r");
+    yyin = re_input;
+    step_compile = 2;
+    line_number = 1;
+
+    while (!feof(yyin))
+    {
+        yyparse();
+    }
+
+    puts("Genrating output file, check output/safec.c");
 
     write_code_table(code_table);
 

@@ -3,8 +3,8 @@
 #include "sintatico.h"
 #include <stdlib.h>
 #include <stdio.h>
-int line_number=1;
 extern node *list;
+int line_number=1;
 %}
 
 white [ \t]+

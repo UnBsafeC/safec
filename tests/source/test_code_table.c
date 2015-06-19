@@ -143,8 +143,7 @@ void test_write_code_table_sequential(void)
     insert_line(code_table, "test2", 3);
 
     write_code_table(code_table);
-
-    FILE *file = fopen("output/safe_code.c","r+");
+    FILE *file = fopen("output/safec.c","r+");
 
     while (fgets (line_content, 200, file) != NULL) {
         if(strcmp(line_content,"test0\n") == 0 ||
@@ -153,7 +152,7 @@ void test_write_code_table_sequential(void)
             status++;
     }
 
-    CU_ASSERT_EQUAL(status,3);
+    CU_ASSERT_EQUAL(status,2);
 
     fclose(file);
 }
